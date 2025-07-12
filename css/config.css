@@ -12,20 +12,29 @@
   box-sizing: border-box;
 }
 
+/* Body + HTML */
 html, body {
   height: 100%;
-  background-color: #000; /* nền đen */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #000;
 }
 
-/* Căn giữa nội dung */
+/* Không cho chọn chữ */
+body, h1 {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none;     /* IE/Edge */
+}
+
+/* Căn giữa nội dung và cách dòng */
 body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  gap: 2vh;
 }
 
-/* H1 chính giữa, màu cam, cỡ chữ responsive */
+/* H1: font Impact, màu cam, responsive size */
 h1 {
   font-family: 'ImpactLocal', sans-serif;
   color: #ff3c00;
@@ -34,4 +43,3 @@ h1 {
   line-height: 1;
   font-size: clamp(32px, 12vw, 160px);
 }
-
