@@ -27,9 +27,11 @@ body {
 
 /* H1 chính giữa, màu cam, cỡ chữ responsive */
 h1 {
+  font-family: 'ImpactLocal', sans-serif;
   color: #ff3c00;
   font-weight: 900;
   text-align: center;
   line-height: 1;
   font-size: clamp(32px, 12vw, 160px);
 }
+
