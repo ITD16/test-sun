@@ -1,4 +1,5 @@
-
+if (window.ENABLE_FIREWORK === true)
+{
     // ============== PHẦN PHÁO HOA ==============
     window.addEventListener("resize", resizeCanvas, false);
     window.addEventListener("DOMContentLoaded", onLoad, false);
@@ -160,4 +161,4 @@
       else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
       else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
     }
-  
+}
