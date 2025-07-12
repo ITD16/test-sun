@@ -1,52 +1,28 @@
-/* config.css - Basic CSS setup */
-
-:root {
-  --main-bg: #ffffff;
-  --main-text: #222222;
-  --primary-color: #007bff;
-  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
+/* Reset cơ bản */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  background-color: #000; /* nền đen */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Căn giữa nội dung */
 body {
-  background-color: var(--main-bg);
-  color: var(--main-text);
-  font-family: var(--font-family);
-  font-size: 16px;
-  line-height: 1.6;
-  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  margin-bottom: 1rem;
+/* H1 chính giữa, màu cam, cỡ chữ responsive */
+h1 {
+  color: #ff3c00;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1;
+  font-size: clamp(32px, 12vw, 160px);
 }
-
-a {
-  color: var(--primary-color);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-button {
-  background-color: var(--primary-color);
-  color: #fff;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
