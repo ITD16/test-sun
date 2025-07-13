@@ -41,7 +41,7 @@ h1 {
   font-weight: 900;
   text-align: center;
   line-height: 1;
-  font-size: clamp(32px, 11vw, 220px); /* chỉnh cỡ chữ h1 - clamp: min, cỡ chữ theo chiều rộng màn hình (14%), max */
+  font-size: clamp(32px, 10vw, 220px); /* chỉnh cỡ chữ h1 - clamp: min, cỡ chữ theo chiều rộng màn hình (14%), max */
   position: relative; /* hoặc absolute nếu bạn cần đặt cụ thể */
   z-index: 1;          /* cao hơn canvas */
 }
