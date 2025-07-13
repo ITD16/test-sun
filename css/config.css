@@ -38,10 +38,11 @@ body {
 h1 {
   font-family: 'ImpactLocal', sans-serif;
   color: #ff3c00;
-  font-weight: 5000;
+  font-weight: 900;
   text-align: center;
-  line-height: 1;
+  line-height: 1.5;
   transform: scaleY(2); /* ✅ làm chữ cao hơn */
+  transform: scaleX(2); /* ✅ làm chữ dày hơn */
   display: inline-block;
   font-size: clamp(32px, 10vw, 220px); /* chỉnh cỡ chữ h1 - clamp: min, cỡ chữ theo chiều rộng màn hình (14%), max */
   position: relative; /* hoặc absolute nếu bạn cần đặt cụ thể */
