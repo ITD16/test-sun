@@ -38,7 +38,7 @@ body {
 h1 {
   font-family: 'ImpactLocal', sans-serif;
   color: #ff3c00;
-  font-weight: 900;
+  font-weight: 4000;
   text-align: center;
   line-height: 1.5; /* Khoảng cách giữa 2 hàng chữ */
   transform: scaleY(3); /* ✅ làm chữ cao hơn */
