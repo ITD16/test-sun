@@ -40,7 +40,7 @@ h1 {
   color: #ff3c00;
   font-weight: 900;
   text-align: center;
-  line-height: 1.5; /* Khoảng cách giữa 2 hàng chữ */
+  line-height: 1; /* Khoảng cách giữa 2 hàng chữ */
   transform: scaleY(1); /* ✅ làm chữ cao hơn */
   transform: scaleX(1); /* ✅ làm chữ dày hơn */
   letter-spacing: 0em; /* hoặc px nếu bạn muốn cố định */
