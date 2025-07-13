@@ -43,6 +43,7 @@ h1 {
   line-height: 1.5; /* Khoảng cách giữa 2 hàng chữ */
   transform: scaleY(3); /* ✅ làm chữ cao hơn */
   transform: scaleX(2); /* ✅ làm chữ dày hơn */
+  letter-spacing: 0.05em; /* hoặc px nếu bạn muốn cố định */
   display: inline-block;
   font-size: clamp(32px, 7vw, 220px); /* chỉnh cỡ chữ h1 - clamp: min, cỡ chữ theo chiều rộng màn hình (14%), max */
   position: relative; /* hoặc absolute nếu bạn cần đặt cụ thể */
