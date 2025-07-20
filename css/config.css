@@ -51,20 +51,20 @@ body {
   z-index: 1;          /* cao hơn canvas */
 } 
 
-h1.autofit {
+.autofit {
   font-family: 'ImpactLocal', sans-serif;
   color: #ff3c00;
   font-weight: 900;
   text-align: center;
   line-height: 1;
   letter-spacing: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  margin: 0;
-  user-select: none;
+  display: inline-block;
+  font-size: clamp(32px, 14vw, 220px); /* Kích thước tự động theo chiều ngang */
+  position: relative;
+  z-index: 1;
+  transform: scaleY(1.05) scaleX(1.05); /* nếu cần "nở" ra thêm */
 }
+
 
 
 canvas {
