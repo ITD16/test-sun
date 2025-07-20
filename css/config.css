@@ -62,8 +62,8 @@ body {
   margin: 0 auto;
   position: relative;
   z-index: 1;
-  transform: scaleY(1.05);
   white-space: nowrap;
+  overflow: hidden;
 }
 
 canvas {
