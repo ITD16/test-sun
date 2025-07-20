@@ -35,7 +35,8 @@ body {
 }
 
 /* H1: font Impact, màu cam, responsive size */
-/* h1 {
+
+ h1.old {
   font-family: 'ImpactLocal', sans-serif;
   color: #ff3c00;
   font-weight: 900;
@@ -48,10 +49,10 @@ body {
   font-size: clamp(32px, 14vw, 220px); /* chỉnh cỡ chữ h1 - clamp: min, cỡ chữ theo chiều rộng màn hình (14%), max */
   position: relative; /* hoặc absolute nếu bạn cần đặt cụ thể */
   z-index: 1;          /* cao hơn canvas */
-} */
+} 
 
 h1.autofit {
-  font-family: Impact, sans-serif;
+  font-family: 'ImpactLocal', sans-serif;
   color: #ff3c00;
   font-weight: 900;
   text-align: center;
