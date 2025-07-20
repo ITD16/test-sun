@@ -1,19 +1,16 @@
-// src/scripts/autofit.js
+// auto-fit.js
+window.addEventListener('load', autoFitText);
+window.addEventListener('resize', autoFitText);
 
-function adjustFontSize() {
-  const maxFontSize = 220;
-  const minFontSize = 32;
-
-  document.querySelectorAll('h1.autofit').forEach(el => {
-    const textLength = el.textContent.length;
-    const containerWidth = window.innerWidth;
-    const baseCharWidth = 0.55;
-    let fontSize = containerWidth / (textLength * baseCharWidth);
-    fontSize = Math.max(minFontSize, Math.min(fontSize, maxFontSize));
+function autoFitText() {
+  const elements = document.querySelectorAll('h1.autofit');
+  elements.forEach(el => {
+    let fontSize = 220; // max size
     el.style.fontSize = fontSize + 'px';
+
+    while (el.scrollWidth > window.innerWidth - 40 && fontSize > 32) {
+      fontSize -= 2;
+      el.style.fontSize = fontSize + 'px';
+    }
   });
 }
-
-window.addEventListener('resize', adjustFontSize);
-window.addEventListener('DOMContentLoaded', adjustFontSize);
-
