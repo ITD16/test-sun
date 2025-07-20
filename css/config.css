@@ -52,20 +52,19 @@ body {
 } 
 
 .autofit {
-  font-family: 'ImpactLocal', sans-serif;
+  font-family: 'ImpactLocal', Impact, sans-serif;
   color: #ff3c00;
   font-weight: 900;
   text-align: center;
   line-height: 1;
   letter-spacing: 0;
-  display: inline-block;
-  font-size: clamp(32px, 14vw, 220px); /* Kích thước tự động theo chiều ngang */
+  display: block;
+  margin: 0 auto;
   position: relative;
   z-index: 1;
-  transform: scaleY(1.05) scaleX(1.05); /* nếu cần "nở" ra thêm */
+  transform: scaleY(1.05);
+  white-space: nowrap;
 }
-
-
 
 canvas {
   position: fixed;
