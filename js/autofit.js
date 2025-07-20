@@ -1,18 +1,22 @@
-window.addEventListener('load', autoFitText);
-window.addEventListener('resize', autoFitText);
-
 function autoFitText() {
-  const elements = document.querySelectorAll('h1.autofit');
+  const elements = document.querySelectorAll('.autofit');
+  const maxWidth = window.innerWidth * 0.95;
+  const maxHeight = window.innerHeight * 0.45; // Không cao quá 45% màn hình
+
   elements.forEach(el => {
-    let fontSize = 220; // Kích thước tối đa
+    let fontSize = 220;
     el.style.fontSize = fontSize + 'px';
-    el.style.whiteSpace = 'nowrap'; // Ngăn chữ xuống dòng
 
-    const maxWidth = window.innerWidth - 40; // trừ margin/đệm
-
-    while (el.scrollWidth > maxWidth && fontSize > 32) {
-      fontSize -= 1;
+    // Giảm dần cho đến khi vừa với cả chiều ngang và chiều cao
+    while ((el.scrollWidth > maxWidth || el.offsetHeight > maxHeight) && fontSize > 20) {
+      fontSize--;
       el.style.fontSize = fontSize + 'px';
     }
   });
 }
+
+window.addEventListener('load', autoFitText);
+window.addEventListener('resize', autoFitText);
+window.addEventListener('orientationchange', () => {
+  setTimeout(autoFitText, 300);
+});
