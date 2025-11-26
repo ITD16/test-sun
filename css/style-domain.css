@@ -1,0 +1,12 @@
+body { 
+    margin: 0; 
+    overflow: hidden; 
+    background: transparent; 
+}
+#domain1, #domain2 {
+    position: absolute;
+    font-size: 35px;
+    font-weight: bold;
+    color: #ffcc00;
+    white-space: nowrap;
+}
