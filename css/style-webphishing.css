@@ -37,7 +37,7 @@ body {
 
 /* H1: font Impact, màu cam, responsive size */
 
- h1.old {
+ .h1 {
   font-family: sans-serif;
   color: #ffd24a;
   font-weight: 900;
