@@ -1,4 +1,22 @@
- <script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sun</title>
+  <link rel="stylesheet" href="css/config.css">
+</head>
+<body>
+  <!-- gọi chạy pháo hoa -->
+  <canvas id="canvas"></canvas>
+
+  <!-- Hai dòng domain, sẽ được gán text bằng JS -->
+  <h1 class="autofit" id="domain1"></h1>
+  <h1 class="autofit" id="domain2"></h1>
+
+  <!-- Script đọc config.json và set domain + firework -->
+      <!-- Script đọc config + moving text -->
+  <script>
     const CONFIG_URL = "config.json";
 
     let domain1, domain2;
@@ -129,3 +147,6 @@
 
   <!-- Tự động co chữ theo độ dài -->
   <script src="js/autofit.js" defer></script>
+
+</body>
+</html>
