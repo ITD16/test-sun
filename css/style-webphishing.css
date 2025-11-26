@@ -23,6 +23,9 @@ body, h1 {
   user-select: none;
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none;     /* IE/Edge */
+  
+  /* CHỈNH SỬA KÍCH THƯỚC CHỮ */
+  font-size: 100;  
 }
 
 /* Căn giữa nội dung và cách dòng */
