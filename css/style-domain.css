@@ -3,10 +3,15 @@ body {
     overflow: hidden; 
     background: transparent; 
 }
-#domain1, #domain2 {
-    position: absolute;
-    font-size: 35px;
-    font-weight: bold;
-    color: #ffcc00;
-    white-space: nowrap;
+.moving-domain {
+  position: absolute;
+  font-size: 35px;
+  font-weight: bold;
+  color: #ffcc00;
+  white-space: nowrap;
+  pointer-events: none;
+
+  margin: 0;       
+  padding: 0;
+  line-height: 1;  
 }
