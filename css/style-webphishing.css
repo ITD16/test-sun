@@ -55,7 +55,7 @@ body {
 .autofit {
     
   /* CHỈNH SỬA KÍCH THƯỚC CHỮ */
-  font-size: 4em;  !important
+  font-size: 4em  !important;  
   font-family: 'ImpactLocal', Impact, sans-serif;
   color: #ffd24a;
   font-weight: 900;
