@@ -38,7 +38,7 @@ body {
 /* H1: font Impact, màu cam, responsive size */
 
  h1.old {
-  font-family: 'ImpactLocal', sans-serif;
+  font-family: sans-serif,'ImpactLocal';
   color: #ffd24a;
   font-weight: 900;
   text-align: center;
