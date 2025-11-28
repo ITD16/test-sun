@@ -1,12 +1,8 @@
 {
   "title": "Sun",
   "enableFirework": false,
-  "domainTablet": [
+  "domains": [
     "SUNWIN.SX",
     "GEM.WIN"
-  ],
-  "domainMoving": [
-    "✅SUNWIN.SX",
-    "✅GEM.WIN"
   ]
 }
