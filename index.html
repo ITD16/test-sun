@@ -10,59 +10,16 @@
   <!-- gọi chạy pháo hoa -->
   <canvas id="canvas"></canvas>
 
-  <!-- Hai dòng domain, sẽ được gán text bằng JS -->
-  <h1 class="autofit" id="domain1"></h1>
-  <h1 class="autofit" id="domain2"></h1>
-
-  <!-- Script đọc config.json và set domain + firework -->
-    <script>
-    const CONFIG_URL = "config.json";
-
-    async function applyConfig() {
-      try {
-        // Thêm query ?t=... để chống cache CDN/OBS
-        const res = await fetch(CONFIG_URL + "?t=" + Date.now(), { cache: "no-cache" });
-        if (!res.ok) throw new Error("Không load được config.json");
-        const cfg = await res.json();
-
-        // Set title (nếu có)
-        if (cfg.title) {
-          document.title = cfg.title;
-        }
-
-        // Set domain text
-        const domains = cfg.domains || [];
-        const d1 = document.getElementById("domain1");
-        const d2 = document.getElementById("domain2");
-
-        d1.textContent = domains[0] || "";
-        d2.textContent = domains[1] || "";
-
-        // Set bật/tắt pháo hoa
-        window.ENABLE_FIREWORK = cfg.enableFirework === true;
-
-      } catch (e) {
-        console.error(e);
-
-        // Fallback nếu lỗi: vẫn có text và tắt pháo hoa
-        document.getElementById("domain1").textContent = "SUN.WIN";
-        document.getElementById("domain2").textContent = "GEM.WIN";
-        window.ENABLE_FIREWORK = false;
-      }
-    }
-
-    // Gọi ngay lần đầu
-    applyConfig();
-
-    // Sau đó mỗi 10 giây đọc lại config.json một lần
-    setInterval(applyConfig, 10000);
-  </script>
-
-
+  <!-- <h1 class="autofit">SUNWIN.CLUB</h1> -->
+  <h1 class="autofit">SUNWIN.SX</h1>
+  <h1 class="autofit">GEM.WIN</h1>
   <!-- Chạy script Double Fullscreen -->
   <script src="js/fullscreen.js"></script> 
   
-  <!-- Chạy script Pháo hoa (sử dụng window.ENABLE_FIREWORK đã set ở trên) -->
+  <!-- Chạy script Pháo hoa -->
+  <script>
+    window.ENABLE_FIREWORK = false;
+  </script>
   <script src="js/firework.js"></script>
 
   <!-- Tự động co chữ theo độ dài -->
