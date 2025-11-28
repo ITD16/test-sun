@@ -36,9 +36,9 @@
       }
 
       // Set domain text (lần sau gọi lại chỉ đổi text, không reset vị trí)
-      const domains = cfg.domains || [];
-      if (domain1) domain1.textContent = domains[0] || "";
-      if (domain2) domain2.textContent = domains[1] || "";
+      const domainMoving = cfg.domainMoving || [];
+      if (domain1) domain1.textContent = domainMoving[0] || "";
+      if (domain2) domain2.textContent = domainMoving[1] || "";
 
       // Bật/tắt pháo hoa
       window.ENABLE_FIREWORK = cfg.enableFirework === true;
