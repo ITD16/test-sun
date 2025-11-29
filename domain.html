@@ -11,8 +11,16 @@
   <canvas id="canvas"></canvas>
 
   <!-- Hai dòng domain, sẽ được gán text bằng JS -->
-  <h1 class="moving-domain"  id="domain1"></h1>
-  <h1 class="moving-domain"  id="domain2"></h1>
+  <h1 class="moving-domain" id="domain1">
+  <span class="icon">✅</span>
+  <span class="domain-text"></span>
+</h1>
+
+<h1 class="moving-domain" id="domain2">
+  <span class="icon">✅</span>
+  <span class="domain-text"></span>
+</h1>
+
 
   <!-- Script đọc config.json và set domain + firework -->
       <!-- Script đọc config + moving text -->
@@ -24,37 +32,38 @@
 
   // ====== Đọc config.json và gán title / domain / firework ======
   async function applyConfig() {
-    try {
-      // Thêm ?t=timestamp để tránh cache CDN / OBS
-      const res = await fetch(CONFIG_URL + "?t=" + Date.now(), { cache: "no-cache" });
-      if (!res.ok) throw new Error("Không load được config.json");
-      const cfg = await res.json();
+  try {
+    const res = await fetch(CONFIG_URL + "?t=" + Date.now(), { cache: "no-cache" });
+    if (!res.ok) throw new Error("Không load được config.json");
+    const cfg = await res.json();
 
-      // Set title (nếu có)
-      if (cfg.title) {
-        document.title = cfg.title;
-      }
-
-      // Set domain text (lần sau gọi lại chỉ đổi text, không reset vị trí)
-      const domains = cfg.domains || [];
-
-      // Tên tiền tố 
-      const textPrefix = "✅" 
-      if (domain1) domain1.textContent = textPrefix + domains[0] || "";
-      if (domain2) domain2.textContent = textPrefix + domains[1] || "";
-
-      // Bật/tắt pháo hoa
-      window.ENABLE_FIREWORK = cfg.enableFirework === true;
-
-    } catch (e) {
-      console.error(e);
-
-      // Fallback nếu lỗi
-      if (domain1) domain1.textContent = "SUN.WIN";
-      if (domain2) domain2.textContent = "GEM.WIN";
-      window.ENABLE_FIREWORK = false;
+    if (cfg.title) {
+      document.title = cfg.title;
     }
+
+    const domains = cfg.domains || [];
+
+    // Lấy span domain-text bên trong mỗi h1
+    const d1Text = domain1.querySelector(".domain-text");
+    const d2Text = domain2.querySelector(".domain-text");
+
+    if (d1Text) d1Text.textContent = domains[0] || "";
+    if (d2Text) d2Text.textContent = domains[1] || "";
+
+    window.ENABLE_FIREWORK = cfg.enableFirework === true;
+
+  } catch (e) {
+    console.error(e);
+
+    const d1Text = domain1?.querySelector(".domain-text");
+    const d2Text = domain2?.querySelector(".domain-text");
+
+    if (d1Text) d1Text.textContent = "SUN.WIN";
+    if (d2Text) d2Text.textContent = "GEM.WIN";
+
+    window.ENABLE_FIREWORK = false;
   }
+}
 
   // ====== Moving / Bouncing 2 dòng domain ======
   let x1, y1, dx1, dy1;
