@@ -1,0 +1,126 @@
+const CONFIG_URL = "config.json";
+
+let domain1 = null;
+let domain2 = null;
+
+// ====== Đọc config.json và gán title / domain ======
+async function applyConfig() {
+  try {
+    const res = await fetch(CONFIG_URL + "?t=" + Date.now(), { cache: "no-cache" });
+    if (!res.ok) throw new Error("Không load được config.json");
+    const cfg = await res.json();
+
+    if (cfg.title) document.title = cfg.title;
+
+    const domains = cfg.domains || [];
+
+    const d1Text = domain1.querySelector(".domain-text");
+    const d2Text = domain2.querySelector(".domain-text");
+
+    if (d1Text) d1Text.textContent = domains[0] || "";
+    if (d2Text) d2Text.textContent = domains[1] || "";
+
+    window.ENABLE_FIREWORK = cfg.enableFirework === true;
+
+  } catch (e) {
+    console.error(e);
+
+    const d1Text = domain1?.querySelector(".domain-text");
+    const d2Text = domain2?.querySelector(".domain-text");
+
+    if (d1Text) d1Text.textContent = "SUN.WIN";
+    if (d2Text) d2Text.textContent = "SUN.WIN";
+
+    window.ENABLE_FIREWORK = false;
+  }
+}
+
+// ====== Moving 2 dòng riêng biệt ======
+let x1, y1, dx1, dy1;
+let x2, y2, dx2, dy2;
+
+function random(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function initPositions() {
+  if (!domain1 || !domain2) return;
+
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+
+  // === Dòng 1 ===
+  const w1 = domain1.offsetWidth;
+  const h1 = domain1.offsetHeight;
+
+  x1 = random(0, W - w1);
+  y1 = random(0, H - h1);
+  dx1 = 1.3 * (Math.random() < 0.5 ? 1 : -1);
+  dy1 = 1.6 * (Math.random() < 0.5 ? 1 : -1);
+
+  // === Dòng 2 ===
+  const w2 = domain2.offsetWidth;
+  const h2 = domain2.offsetHeight;
+
+  x2 = random(0, W - w2);
+  y2 = random(0, H - h2);
+  dx2 = 1.4 * (Math.random() < 0.5 ? 1 : -1);
+  dy2 = 1.7 * (Math.random() < 0.5 ? 1 : -1);
+}
+
+function animate() {
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+
+  // ===== Dòng 1 =====
+  const w1 = domain1.offsetWidth;
+  const h1 = domain1.offsetHeight;
+
+  x1 += dx1;
+  y1 += dy1;
+
+  if (x1 <= 0 || x1 + w1 >= W) dx1 = -dx1;
+  if (y1 <= 0 || y1 + h1 >= H) dy1 = -dy1;
+
+  domain1.style.left = x1 + "px";
+  domain1.style.top  = y1 + "px";
+
+  // ===== Dòng 2 =====
+  const w2 = domain2.offsetWidth;
+  const h2 = domain2.offsetHeight;
+
+  x2 += dx2;
+  y2 += dy2;
+
+  if (x2 <= 0 || x2 + w2 >= W) dx2 = -dx2;
+  if (y2 <= 0 || y2 + h2 >= H) dy2 = -dy2;
+
+  domain2.style.left = x2 + "px";
+  domain2.style.top  = y2 + "px";
+
+  requestAnimationFrame(animate);
+}
+
+
+// ====== Khởi động ======
+async function startAll() {
+  domain1 = document.getElementById("domain1");
+  domain2 = document.getElementById("domain2");
+
+  if (!domain1 || !domain2) {
+    console.error("Thiếu domain1 hoặc domain2");
+    return;
+  }
+
+  await applyConfig();
+
+  requestAnimationFrame(() => {
+    initPositions();
+    animate();
+  });
+
+  setInterval(applyConfig, 10000);
+  window.addEventListener("resize", initPositions);
+}
+
+window.addEventListener("load", startAll);
