@@ -17,7 +17,7 @@ body {
 .frame {
   width: 95vw;
   aspect-ratio: 5 / 1;
-  background: #111;
+  background: transparent;
   display: flex;
   flex-direction: column;
   justify-content: center;
