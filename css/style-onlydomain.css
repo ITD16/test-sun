@@ -32,14 +32,15 @@ body {
   align-items: center;
   flex-direction: column;
   gap: 2vh;
+  background: #761465;
 }
 
 /* H1: font Impact, màu cam, responsive size */
 
  h1.old {
   font-family: 'ImpactLocal', sans-serif;
-  color: #ff3c00;
-  font-weight: 900;
+  color: #fff;
+  font-weight: 400;
   text-align: center;
   line-height: 1; /* Khoảng cách giữa 2 hàng chữ */
   transform: scaleY(1); /* ✅ làm chữ cao hơn */
@@ -53,8 +54,8 @@ body {
 
 .autofit {
   font-family: 'ImpactLocal', Impact, sans-serif;
-  color: #ff3c00;
-  font-weight: 900;
+  color: #fff;
+  font-weight: 400;
   text-align: center;
   line-height: 1;
   letter-spacing: 0;
