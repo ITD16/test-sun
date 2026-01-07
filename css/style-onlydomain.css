@@ -1,10 +1,5 @@
-@font-face {
-  font-family: 'ImpactLocal';
-  src: url('../fonts/impact.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 /* Reset cơ bản */
 * {
   margin: 0;
@@ -38,7 +33,7 @@ body {
 /* H1: font Impact, màu cam, responsive size */
 
  h1.old {
-  font-family: 'ImpactLocal', sans-serif;
+  font-family: 'Roboto', sans-serif;
   color: #fff;
   font-weight: 400;
   text-align: center;
@@ -53,7 +48,7 @@ body {
 } 
 
 .autofit {
-  font-family: 'ImpactLocal', Impact, sans-serif;
+  font-family: 'Roboto', Impact, sans-serif;
   color: #fff;
   font-weight: 400;
   text-align: center;
