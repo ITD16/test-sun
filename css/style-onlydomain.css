@@ -78,7 +78,7 @@ canvas {
 
 #clock-container {
   position: fixed;
-  bottom: 20px;
+  bottom: 2rem;
   left: 0;
   width: 100%;
   text-align: center;
