@@ -35,7 +35,7 @@ body {
  h1.old {
   font-family: 'Roboto', sans-serif;
   color: #fff;
-  font-weight: 400;
+  font-weight: 600;
   text-align: center;
   line-height: 1; /* Khoảng cách giữa 2 hàng chữ */
   transform: scaleY(1); /* ✅ làm chữ cao hơn */
@@ -50,7 +50,7 @@ body {
 .autofit {
   font-family: 'Roboto', Impact, sans-serif;
   color: #fff;
-  font-weight: 400;
+  font-weight: 600;
   text-align: center;
   line-height: 1;
   letter-spacing: 0;
