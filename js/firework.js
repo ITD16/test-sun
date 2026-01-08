@@ -9,8 +9,8 @@ function startFirework() {
         function (callback) {
             window.setTimeout(callback, 1000 / 60);
         };
-
-    var canvas, ctx, w, h, particles = [], probability = 0.015,
+    // Tăng xác suất spam nè
+    var canvas, ctx, w, h, particles = [], probability = 0.03,
         xPoint, yPoint;
 
     function onLoad() {
@@ -45,7 +45,8 @@ function startFirework() {
     }
 
     function updateParticles() {
-        if (particles.length < 100 && Math.random() < probability) {
+        // Tăng giới hạn số hạt
+        if (particles.length < 200 && Math.random() < probability) {
             createFirework(
                 Math.random() * (w - 200) + 100,
                 Math.random() * (h - 200) + 100
@@ -65,7 +66,7 @@ function startFirework() {
     function createFirework(x, y) {
         xPoint = x;
         yPoint = y;
-        const nFire = Math.random() * 50 + 80;
+        const nFire = Math.random() * 120 + 180;
         const c = `rgb(${~~(Math.random()*200+55)},${~~(Math.random()*200+55)},${~~(Math.random()*200+55)})`;
         for (let i = 0; i < nFire; i++) {
             const p = new Particle();
@@ -75,15 +76,16 @@ function startFirework() {
     }
 
     function Particle() {
-        this.w = this.h = Math.random() * 3 + 1;
+        // Kích thước hạt
+        this.w = this.h = Math.random() * 4 + 2;
         this.x = xPoint;
         this.y = yPoint;
-        this.vx = (Math.random() - 0.5) * 8;
-        this.vy = (Math.random() - 0.5) * 8;
+        this.vx = (Math.random() - 0.5) * 14;
+        this.vy = (Math.random() - 0.5) * 14;
         this.alpha = Math.random() * .5 + .5;
     }
-
-    Particle.prototype.gravity = 0.05;
+    // Pháo nở lâu hơn nè (Càng thấp xuất hiện càng lâu)
+    Particle.prototype.gravity = 0.04;
     Particle.prototype.move = function () {
         this.x += this.vx;
         this.vy += this.gravity;
