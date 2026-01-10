@@ -12,7 +12,7 @@ function startFirework() {
 
     let canvas, ctx, w, h;
     let particles = [];
-    let probability = 0.03;
+    let probability = 0.025;
     let xPoint, yPoint;
 
     function onLoad() {
@@ -91,13 +91,13 @@ function startFirework() {
         const angle = Math.random() * Math.PI * 2;
         const speed = Math.random() * 8 + 6;
 
-        this.vx = Math.cos(angle) * speed * (0.9 + Math.random() * 0.2);
-        this.vy = Math.sin(angle) * speed * (0.9 + Math.random() * 0.2);
+        this.vx = Math.cos(angle) * speed * (0.8 + Math.random() * 0.2);
+        this.vy = Math.sin(angle) * speed * (0.8 + Math.random() * 0.2);
 
         this.alpha = Math.random() * 0.5 + 0.5;
     }
 
-    Particle.prototype.gravity = 0.04;
+    Particle.prototype.gravity = 0.03;
 
     Particle.prototype.move = function () {
         this.x += this.vx;
