@@ -9,9 +9,11 @@ function startFirework() {
         function (callback) {
             window.setTimeout(callback, 1000 / 60);
         };
-    // Tăng xác suất spam nè
-    var canvas, ctx, w, h, particles = [], probability = 0.03,
-        xPoint, yPoint;
+
+    let canvas, ctx, w, h;
+    let particles = [];
+    let probability = 0.03;
+    let xPoint, yPoint;
 
     function onLoad() {
         canvas = document.getElementById("canvas");
@@ -23,12 +25,13 @@ function startFirework() {
         resizeCanvas();
         requestAnimationFrame(updateWorld);
 
+        // Pháo lớn theo chu kỳ
         setInterval(() => {
             createFirework(
-                Math.random() * (w - 200) + 100,
-                Math.random() * (h - 200) + 100
+                Math.random() * (w - 300) + 150,
+                Math.random() * (h - 300) + 150
             );
-        }, 4000);
+        }, 1500);
     }
 
     function resizeCanvas() {
@@ -45,47 +48,57 @@ function startFirework() {
     }
 
     function updateParticles() {
-        // Tăng giới hạn số hạt
-        if (particles.length < 200 && Math.random() < probability) {
+        if (particles.length < 400 && Math.random() < probability) {
             createFirework(
-                Math.random() * (w - 200) + 100,
-                Math.random() * (h - 200) + 100
+                Math.random() * (w - 300) + 150,
+                Math.random() * (h - 300) + 150
             );
         }
         particles = particles.filter(p => p.move());
     }
 
     function paint() {
-        ctx.globalCompositeOperation = 'source-over';
+        ctx.globalCompositeOperation = "source-over";
         ctx.fillStyle = "rgba(0,0,0,0.15)";
         ctx.fillRect(0, 0, w, h);
-        ctx.globalCompositeOperation = 'lighter';
+
+        ctx.globalCompositeOperation = "lighter";
         particles.forEach(p => p.draw(ctx));
     }
 
     function createFirework(x, y) {
         xPoint = x;
         yPoint = y;
+
         const nFire = Math.random() * 120 + 180;
-        const c = `rgb(${~~(Math.random()*200+55)},${~~(Math.random()*200+55)},${~~(Math.random()*200+55)})`;
+        const color = `rgb(${~~(Math.random() * 200 + 55)},${~~(
+            Math.random() * 200 + 55
+        )},${~~(Math.random() * 200 + 55)})`;
+
         for (let i = 0; i < nFire; i++) {
             const p = new Particle();
-            p.color = c;
+            p.color = color;
             particles.push(p);
         }
     }
 
     function Particle() {
-        // Kích thước hạt
         this.w = this.h = Math.random() * 4 + 2;
         this.x = xPoint;
         this.y = yPoint;
-        this.vx = (Math.random() - 0.5) * 14;
-        this.vy = (Math.random() - 0.5) * 14;
-        this.alpha = Math.random() * .5 + .5;
+
+        // NỔ TRÒN CHUẨN
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 8 + 6;
+
+        this.vx = Math.cos(angle) * speed * (0.9 + Math.random() * 0.2);
+        this.vy = Math.sin(angle) * speed * (0.9 + Math.random() * 0.2);
+
+        this.alpha = Math.random() * 0.5 + 0.5;
     }
-    // Pháo nở lâu hơn nè (Càng thấp xuất hiện càng lâu)
+
     Particle.prototype.gravity = 0.04;
+
     Particle.prototype.move = function () {
         this.x += this.vx;
         this.vy += this.gravity;
@@ -93,6 +106,7 @@ function startFirework() {
         this.alpha -= 0.012;
         return this.alpha > 0;
     };
+
     Particle.prototype.draw = function (c) {
         c.save();
         c.translate(this.x, this.y);
@@ -104,6 +118,5 @@ function startFirework() {
         c.restore();
     };
 
-    // ⭐ GỌI NGAY
     onLoad();
 }
