@@ -12,7 +12,10 @@ function startFirework() {
 
     let canvas, ctx, w, h;
     let particles = [];
-    let probability = 0.025;
+
+    // 🔽 Tần suất ngẫu nhiên GIẢM 1/2
+    let probability = 0.0125;
+
     let xPoint, yPoint;
 
     function onLoad() {
@@ -25,13 +28,13 @@ function startFirework() {
         resizeCanvas();
         requestAnimationFrame(updateWorld);
 
-        // Pháo lớn theo chu kỳ
+        // 🔽 Chu kỳ pháo lớn GIẢM 1/2 (1.5s → 3s)
         setInterval(() => {
             createFirework(
                 Math.random() * (w - 300) + 150,
                 Math.random() * (h - 300) + 150
             );
-        }, 1500);
+        }, 3000);
     }
 
     function resizeCanvas() {
@@ -87,9 +90,9 @@ function startFirework() {
         this.x = xPoint;
         this.y = yPoint;
 
-        // NỔ TRÒN CHUẨN
+        // 🔽 Phạm vi nổ GIẢM 1/2 (speed 6–14 → 3–7)
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 8 + 6;
+        const speed = Math.random() * 4 + 3;
 
         this.vx = Math.cos(angle) * speed * (0.8 + Math.random() * 0.2);
         this.vy = Math.sin(angle) * speed * (0.8 + Math.random() * 0.2);
