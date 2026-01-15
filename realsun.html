@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THẬT - Stream</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+    }
+
+    header {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      font-weight: 800;
+      color: #003399; /* xanh dương đậm */
+      background: white;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .stream-box {
+      width: 100%;
+      height: 600px;
+      border: 2px solid #003399;
+      border-radius: 10px;
+      overflow: hidden;
+      background: black;
+    }
+
+    .link {
+      margin-top: 12px;
+      font-size: 16px;
+      word-break: break-all;
+    }
+
+    .link a {
+      color: #003399;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <header>THẬT</header>
+
+  <div class="container">
+    <!-- ✅ Thay STREAM_URL_HERE bằng link stream của mày -->
+    <div class="stream-box">
+      <iframe
+        src="STREAM_URL_HERE"
+        width="100%"
+        height="100%"
+        frameborder="0"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    <div class="link">
+      Link stream: <a href="STREAM_URL_HERE" target="_blank">STREAM_URL_HERE</a>
+    </div>
+  </div>
+</body>
+</html>
