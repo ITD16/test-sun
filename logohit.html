@@ -76,8 +76,8 @@ svg{width:100%;height:100%;}
         fill="none"
         stroke="url(#goldMetal)"
         stroke-width="26.0"
-        filter="url(#goldGlow)">
-    HITCLUB.IN
+        filter="url(#goldGlow)"
+        class="hitclub">
   </text>
 
   <!-- Viền vàng kim chính -->
@@ -86,8 +86,8 @@ svg{width:100%;height:100%;}
         letter-spacing="0.13em"
         fill="none"
         stroke="url(#goldMetal)"
-        stroke-width="14.0">
-    HITCLUB.IN
+        stroke-width="14.0"
+        class="hitclub">
   </text>
 
   <!-- Thân chữ + bóng đổ đèn chiếu -->
@@ -98,8 +98,8 @@ svg{width:100%;height:100%;}
         stroke="url(#brownGoldFill)"
         stroke-width="17.0"
         paint-order="stroke fill"
-        filter="url(#softLampShadow)">
-    HITCLUB.IN
+        filter="url(#softLampShadow)"
+        class="hitclub">
   </text>
 
   <!-- ================= GO88.PW ================= -->
@@ -111,8 +111,8 @@ svg{width:100%;height:100%;}
         fill="none"
         stroke="url(#goldMetal)"
         stroke-width="26.0"
-        filter="url(#goldGlow)">
-    GO88.PW
+        filter="url(#goldGlow)"
+        class="go88">
   </text>
 
   <!-- Viền vàng kim chính -->
@@ -121,8 +121,8 @@ svg{width:100%;height:100%;}
         letter-spacing="0.09em"
         fill="none"
         stroke="url(#goldMetal)"
-        stroke-width="14.0">
-    GO88.PW
+        stroke-width="14.0"
+        class="go88">
   </text>
 
   <!-- Thân chữ + bóng đổ đèn chiếu -->
@@ -133,12 +133,49 @@ svg{width:100%;height:100%;}
         stroke="url(#brownGoldFill)"
         stroke-width="15.8"
         paint-order="stroke fill"
-        filter="url(#softLampShadow)">
-    GO88.PW
+        filter="url(#softLampShadow)"
+        class="go88">
   </text>
 
 </g>
 </svg>
 
+
+  <script>
+const CONFIG_URL = "config.json";
+
+async function applyConfig() {
+  try {
+    const res = await fetch(CONFIG_URL + "?t=" + Date.now(), { cache: "no-cache" });
+    if (!res.ok) throw new Error("Không load được config.json");
+
+    const cfg = await res.json();
+
+    // Set title
+    if (cfg.title) {
+      document.title = cfg.title;
+    }
+
+    // Set domain
+    const domains = cfg.domainshit || [];
+    document.querySelectorAll(".hitclub").forEach(el => {
+      el.textContent = domains[0] || "";
+    });
+    
+    document.querySelectorAll(".go88").forEach(el => {
+      el.textContent = domains[1] || "";
+    });
+
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+  // Lần đầu
+  applyConfig();
+  
+  // Reload config mỗi 10s
+  setInterval(applyConfig, 10000);
+</script>
 </body>
 </html>
