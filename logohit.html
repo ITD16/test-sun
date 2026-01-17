@@ -151,11 +151,6 @@ async function applyConfig() {
 
     const cfg = await res.json();
 
-    // Set title
-    if (cfg.title) {
-      document.title = cfg.title;
-    }
-
     // Set domain
     const domains = cfg.domainshit || [];
     document.querySelectorAll(".hitclub").forEach(el => {
