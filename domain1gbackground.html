@@ -91,7 +91,8 @@ svg{
         fill="none"
         stroke="url(#edgeCap)"
         stroke-width="10.5"
-        filter="url(#softLampShadow)">SUNWIN.SX</text>
+        filter="url(#softLampShadow)"
+        class="sun"></text>
 
   <!-- thân chữ gold -->
   <text x="960" y="520"
@@ -99,7 +100,8 @@ svg{
         letter-spacing="0.13em"
         fill="url(#gold4k)"
         stroke="none"
-        filter="url(#sparkle4k)">SUNWIN.SX</text>
+        filter="url(#sparkle4k)"
+        class="sun"></text>
 
   <!-- viền sáng mảnh -->
   <text x="960" y="520"
@@ -108,7 +110,8 @@ svg{
         fill="none"
         stroke="url(#microRim)"
         stroke-width="2.0"
-        opacity="0.65">SUNWIN.SX</text>
+        opacity="0.65"
+        class="sun"></text>
 
   <!-- ================= BOTTOM: GEMWIN.TOP (NHỎ HƠN 20%) ================= -->
   <!-- ĐÃ KÉO LÊN GẦN HƠN: y=725 -->
@@ -118,23 +121,58 @@ svg{
         fill="none"
         stroke="url(#edgeCap)"
         stroke-width="8.6"
-        filter="url(#softLampShadow)">GEMWIN.TOP</text>
+        filter="url(#softLampShadow)"
+        class="gem"></text>
 
   <text x="960" y="725"
         font-size="164"
         letter-spacing="0.11em"
         fill="url(#gold4k)"
         stroke="none"
-        filter="url(#sparkle4k)">GEMWIN.TOP</text>
+        filter="url(#sparkle4k)"
+        class="gem"></text>
         <text x="960" y="725"
         font-size="164"
         letter-spacing="0.11em"
         fill="none"
         stroke="url(#microRim)"
         stroke-width="1.6"
-        opacity="0.65">GEMWIN.TOP</text>
+        opacity="0.65"
+        class="gem"></text>
 
 </g>
 </svg>
+
+  <script>
+const CONFIG_URL = "config.json";
+
+async function applyConfig() {
+  try {
+    const res = await fetch(CONFIG_URL + "?t=" + Date.now(), { cache: "no-cache" });
+    if (!res.ok) throw new Error("Không load được config.json");
+
+    const cfg = await res.json();
+
+    // Set domain
+    const domains = cfg.domains || [];
+    document.querySelectorAll(".sun").forEach(el => {
+      el.textContent = domains[0] || "";
+    });
+    
+    document.querySelectorAll(".gem").forEach(el => {
+      el.textContent = domains[1] || "";
+    });
+
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+  // Lần đầu
+  applyConfig();
+  
+  // Reload config mỗi 10s
+  // setInterval(applyConfig, 10000);
+</script>
 </body>
 </html>
