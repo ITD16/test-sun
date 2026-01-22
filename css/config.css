@@ -1,9 +1,9 @@
-@font-face {
+/* @font-face {
   font-family: 'ImpactLocal';
-  src: url('../fonts/impact.ttf') format('truetype');
+  src: url('../font/impact/impact.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-}
+} */
 
 /* Reset cơ bản */
 * {
@@ -81,13 +81,12 @@ canvas {
 /* Xử lý đồng hồ */
 
 #clock-container {
-  position: fixed;
-  bottom: 20px;
-  left: 0;
+  display: inline-block;
   width: 100%;
   text-align: center;
   pointer-events: none;
   overflow: hidden;
+  position: relative;
 }
 
 #clock-line {
