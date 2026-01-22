@@ -8,7 +8,7 @@
 <style>
 @font-face{
   font-family:"SF Pro Display";
-  src:url("https://ruth742.github.io/sfpro-font/SFPRODISPLAYBOLD.OTF") format("opentype");
+  src: url(../font/SFPRODISPLAYBOLD.OTF) format("opentype");
   font-weight:700;
 }
 html,body{
@@ -143,8 +143,9 @@ svg{
 </g>
 </svg>
 
-  <script>
+ <script>
 const CONFIG_URL = "../config.json";
+let lastDomainsKey = null;
 
 async function applyConfig() {
   try {
@@ -152,15 +153,21 @@ async function applyConfig() {
     if (!res.ok) throw new Error("Không load được config.json");
 
     const cfg = await res.json();
+    const domains = Array.isArray(cfg.domains) ? cfg.domains : [];
+    const d0 = domains[0] || "";
+    const d1 = domains[1] || "";
 
-    // Set domain
-    const domains = cfg.domains || [];
+    // Tạo key để so sánh
+    const key = d0 + "|" + d1;
+    if (key === lastDomainsKey) return; // không đổi => không update DOM
+
+    lastDomainsKey = key;
+
     document.querySelectorAll(".sun").forEach(el => {
-      el.textContent = domains[0] || "";
+      if (el.textContent !== d0) el.textContent = d0;
     });
-    
     document.querySelectorAll(".gem").forEach(el => {
-      el.textContent = domains[1] || "";
+      if (el.textContent !== d1) el.textContent = d1;
     });
 
   } catch (e) {
@@ -168,11 +175,9 @@ async function applyConfig() {
   }
 }
 
-  // Lần đầu
-  applyConfig();
-  
-  // Reload config mỗi 10s
-  // setInterval(applyConfig, 10000);
+applyConfig();
+setInterval(applyConfig, 10000);
 </script>
+
 </body>
 </html>
