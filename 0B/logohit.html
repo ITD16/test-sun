@@ -143,6 +143,7 @@ svg{width:100%;height:100%;}
 
   <script>
 const CONFIG_URL = "../config.json";
+let lastDomainsKey = null;
 
 async function applyConfig() {
   try {
@@ -150,6 +151,15 @@ async function applyConfig() {
     if (!res.ok) throw new Error("Không load được config.json");
 
     const cfg = await res.json();
+    const domains = Array.isArray(cfg.domainshit) ? cfg.domainshit : [];
+    const d0 = domains[0] || "";
+    const d1 = domains[1] || "";
+
+    // Tạo key để so sánh
+    const key = d0 + "|" + d1;
+    if (key === lastDomainsKey) return; // không đổi => không update DOM
+
+    lastDomainsKey = key;
 
     // Set domain
     const domains = cfg.domainshit || [];
