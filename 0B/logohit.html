@@ -162,13 +162,11 @@ async function applyConfig() {
     lastDomainsKey = key;
 
     // Set domain
-    const domains = cfg.domainshit || [];
     document.querySelectorAll(".hitclub").forEach(el => {
-      el.textContent = domains[0] || "";
+      if (el.textContent !== d0) el.textContent = d0;
     });
-    
     document.querySelectorAll(".go88").forEach(el => {
-      el.textContent = domains[1] || "";
+      if (el.textContent !== d1) el.textContent = d1;
     });
 
   } catch (e) {
