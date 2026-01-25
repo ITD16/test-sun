@@ -10,32 +10,30 @@
   <!-- gọi chạy pháo hoa -->
   <canvas id="canvas"></canvas>
 
-  <!-- ✅ LED "con rắn RGB" chạy vòng quanh viền -->
+  <!-- ✅ LED SNAKE DOTS (10 hạt chạy vòng) -->
   <svg class="led-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-    <defs>
-      <!-- Gradient RGB bảy sắc -->
-      <linearGradient id="snakeRGB" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%"   stop-color="#ff004c"/>
-        <stop offset="16%"  stop-color="#ffcc00"/>
-        <stop offset="33%"  stop-color="#00ff88"/>
-        <stop offset="50%"  stop-color="#00aaff"/>
-        <stop offset="66%"  stop-color="#9b00ff"/>
-        <stop offset="83%"  stop-color="#ff6bd6"/>
-        <stop offset="100%" stop-color="#ff004c"/>
-      </linearGradient>
-    </defs>
-
-    <!-- Glow mờ nền (để sang hơn) -->
-    <rect class="led-glow" x="2" y="2" width="96" height="96" rx="10" ry="10"></rect>
-
-    <!-- Con rắn chạy -->
-    <rect class="led-snake" x="2" y="2" width="96" height="96" rx="10" ry="10"></rect>
+    <!-- Đường chạy quanh viền (bo góc) -->
+    <path id="ledPath"
+      d="M 12 2
+         H 88
+         A 10 10 0 0 1 98 12
+         V 88
+         A 10 10 0 0 1 88 98
+         H 12
+         A 10 10 0 0 1 2 88
+         V 12
+         A 10 10 0 0 1 12 2
+         Z"
+      fill="none"
+      stroke="transparent"
+      stroke-width="0"
+    />
+    <g id="ledDots"></g>
   </svg>
 
   <!-- Hai dòng domain, sẽ được gán text bằng JS -->
   <div class="content">
     <h1 class="autofit" style="margin:0 0 30px 0;" id="domain1"></h1>
-
     <!-- Đồng hồ GMT+7 -->
     <div id="clock-container">
       <div id="clock-line">--:--:-- - --/--/----</div>
@@ -52,22 +50,17 @@
       try {
         const res = await fetch(CONFIG_URL + "?t=" + Date.now(), { cache: "no-cache" });
         if (!res.ok) throw new Error("Không load được config.json");
-
         const cfg = await res.json();
 
-        // Set title
         if (cfg.title) document.title = cfg.title;
 
-        // Set domain
         const domains = cfg.domains789 || [];
         document.getElementById("domain1").textContent = domains[0] || "";
 
-        // Bật pháo hoa
         if (cfg.enableFirework === true && !window._fireworkStarted) {
           window._fireworkStarted = false;
           // startFirework();
         }
-
       } catch (e) {
         console.error(e);
       }
@@ -75,6 +68,74 @@
 
     applyConfig();
     setInterval(applyConfig, 10000);
+  </script>
+
+  <!-- ✅ Snake LED engine (đúng kiểu con rắn hạt) -->
+  <script>
+    (function ledSnakeDots() {
+      const path = document.getElementById("ledPath");
+      const dotsGroup = document.getElementById("ledDots");
+      if (!path || !dotsGroup) return;
+
+      const len = path.getTotalLength();
+
+      // ======= TÙY CHỈNH TẠI ĐÂY =======
+      const DOT_COUNT = 10;        // ✅ số hạt (mày muốn 10)
+      const DOT_RADIUS = 1.25;     // ✅ size hạt (nhỏ lại cho đẹp)
+      const SPACING = 14;          // ✅ khoảng cách giữa các hạt (độ dài theo đường chạy)
+      const SPEED = 22;            // ✅ tốc độ chạy (càng nhỏ càng chậm)
+      const HUE_SPEED = 80;        // ✅ tốc độ đổi màu 7 sắc
+      const FADE_TAIL = true;      // ✅ đuôi mờ dần (true/false)
+      // =================================
+
+      // tạo hạt
+      const dots = [];
+      for (let i = 0; i < DOT_COUNT; i++) {
+        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        c.setAttribute("r", String(DOT_RADIUS));
+        dotsGroup.appendChild(c);
+        dots.push(c);
+      }
+
+      function mod(n, m) {
+        return ((n % m) + m) % m;
+      }
+
+      function frame(t) {
+        // t: milliseconds
+        const time = t / 1000;
+
+        // vị trí "đầu rắn" chạy
+        const head = mod(time * SPEED, len);
+
+        for (let i = 0; i < DOT_COUNT; i++) {
+          const dist = mod(head - i * SPACING, len);
+          const p = path.getPointAtLength(dist);
+
+          const dot = dots[i];
+          dot.setAttribute("cx", p.x.toFixed(2));
+          dot.setAttribute("cy", p.y.toFixed(2));
+
+          // mỗi hạt có hue khác nhau + đổi theo thời gian
+          const hue = mod((time * HUE_SPEED) + i * (360 / DOT_COUNT), 360);
+
+          // màu bảy sắc (hsl)
+          dot.setAttribute("fill", `hsl(${hue}, 100%, 60%)`);
+
+          // đuôi mờ (nếu muốn)
+          if (FADE_TAIL) {
+            const op = Math.max(0.15, 1 - i / (DOT_COUNT * 1.15));
+            dot.setAttribute("opacity", op.toFixed(2));
+          } else {
+            dot.setAttribute("opacity", "1");
+          }
+        }
+
+        requestAnimationFrame(frame);
+      }
+
+      requestAnimationFrame(frame);
+    })();
   </script>
 
   <!-- Chạy script Double Fullscreen -->
