@@ -18,10 +18,6 @@
       <div id="clock-line">--:--:-- - --/--/----</div>
     </div>
    </div>
-
-
-
-  
   <script src="../js/firework.js"></script>
   <script src="../js/oclock.js"></script>
     <script>
@@ -45,7 +41,7 @@ async function applyConfig() {
 
     // Bật pháo hoa
     if (cfg.enableFirework === true && !window._fireworkStarted) {
-      window._fireworkStarted = true;
+      window._fireworkStarted = false;
       startFirework();
     }
 
