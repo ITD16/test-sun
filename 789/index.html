@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>789</title>
+  <title>Sun</title>
   <link rel="stylesheet" href="../css/config-789.css">
 </head>
 <body>
   <!-- gọi chạy pháo hoa -->
   <canvas id="canvas"></canvas>
 
-  <!-- ✅ LED hạt RGB chạy vòng quanh viền -->
+  <!-- ✅ LED: con rắn hạt 7 màu + đuôi mờ -->
   <svg class="led-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
     <defs>
-      <!-- Rainbow bảy sắc -->
-      <linearGradient id="rgbDots" x1="0%" y1="0%" x2="100%" y2="0%">
+      <!-- Gradient 7 màu -->
+      <linearGradient id="rgbSnake" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%"   stop-color="#ff004c"/>
         <stop offset="16%"  stop-color="#ffcc00"/>
         <stop offset="33%"  stop-color="#00ff88"/>
@@ -25,15 +25,16 @@
       </linearGradient>
     </defs>
 
-    <!-- Chỉ có hạt chạy -->
-    <rect class="led-dots" x="2" y="2" width="96" height="96" rx="10" ry="10"></rect>
+    <!-- Đuôi mờ -->
+    <rect class="led-trail" x="2" y="2" width="96" height="96" rx="10" ry="10"></rect>
+
+    <!-- Đầu rắn (hạt rõ hơn) -->
+    <rect class="led-snake" x="2" y="2" width="96" height="96" rx="10" ry="10"></rect>
   </svg>
 
   <!-- Hai dòng domain, sẽ được gán text bằng JS -->
   <div class="content">
     <h1 class="autofit" style="margin:0 0 30px 0;" id="domain1"></h1>
-
-    <!-- Đồng hồ GMT+7 -->
     <div id="clock-container">
       <div id="clock-line">--:--:-- - --/--/----</div>
     </div>
@@ -70,10 +71,7 @@
     setInterval(applyConfig, 10000);
   </script>
 
-  <!-- Chạy script Double Fullscreen -->
   <script src="../js/fullscreen.js"></script>
-
-  <!-- Tự động co chữ theo độ dài -->
   <script src="../js/autofit.js" defer></script>
 </body>
 </html>
