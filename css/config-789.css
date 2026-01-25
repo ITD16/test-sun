@@ -105,74 +105,64 @@ canvas {
 }
 
 /* ==========================================================
-   ✅ VIỀN LED ĐUỔI NHAU (INDEX 789) - CHỈ THAY ĐOẠN NÀY
+   ✅ VIỀN LED "CON RẮN RGB" CHẠY ĐUỔI QUANH KHUNG (INDEX 789)
    ========================================================== */
-.led-frame {
+
+/* Khung SVG phủ ngoài */
+.led-border {
   position: fixed;
-  inset: 10px;                 /* khoảng cách viền vào trong */
-  border-radius: 24px;         /* bo góc */
-  pointer-events: none;
+  inset: 10px;                          /* khoảng cách viền vào trong */
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
   z-index: 99999;
+  pointer-events: none;
 }
 
-/* Lớp LED chạy dạng "hạt đuổi" */
-.led-frame::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-
-  /* độ dày của viền LED */
-  padding: 6px;
-
-  /* ✅ Pattern hạt LED chạy: sáng (1) + tắt (2.2) */
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(255, 0, 76, 1) 0px,
-    rgba(255, 0, 76, 1) 8px,
-    rgba(0, 0, 0, 0) 14px,
-    rgba(0, 0, 0, 0) 22px
-  );
-
-  /* ✅ đổi màu RGB theo thời gian */
-  filter: hue-rotate(0deg) blur(0.6px);
-  animation: ledChase 0.55s linear infinite, ledHue 2.5s linear infinite;
-
-  /* chỉ hiển thị border, không che phần trong */
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
+/* Glow nền mờ */
+.led-glow {
+  fill: none;
+  stroke: url(#snakeRGB);
+  stroke-width: 3;
+  opacity: 0.25;
+  filter: drop-shadow(0 0 10px rgba(255, 0, 140, 0.35))
+          drop-shadow(0 0 16px rgba(0, 180, 255, 0.25));
 }
 
-/* Glow nhẹ bên ngoài cho đẹp */
-.led-frame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow:
-    0 0 14px rgba(255, 0, 90, 0.30),
-    0 0 22px rgba(0, 180, 255, 0.22),
-    0 0 34px rgba(170, 0, 255, 0.18);
+/* ✅ Con rắn RGB chạy */
+.led-snake {
+  fill: none;
+  stroke: url(#snakeRGB);
+  stroke-width: 5.5;
+  stroke-linecap: round;
+
+  /*
+    Rect 96x96 => chu vi ~ 384
+    snakeLen = 80 (độ dài con rắn)
+    gap      = 304 (phần tắt)
+    => 1 con rắn chạy vòng quanh
+  */
+  stroke-dasharray: 80 304;
+
+  /* chạy */
+  animation: snakeRun 1.0s linear infinite, snakeHue 2.4s linear infinite;
+
+  /* glow xịn hơn */
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.55))
+          drop-shadow(0 0 14px rgba(0, 180, 255, 0.45));
 }
 
-/* ✅ chạy đuổi: dịch pattern */
-@keyframes ledChase {
-  from { background-position: 0 0; }
-  to   { background-position: 44px 0; }
+/* chạy vòng quanh viền */
+@keyframes snakeRun {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -384; }
 }
 
-/* ✅ RGB tự chạy */
-@keyframes ledHue {
-  from { filter: hue-rotate(0deg) blur(0.6px); }
-  to   { filter: hue-rotate(360deg) blur(0.6px); }
+/* đổi màu mượt kiểu bảy sắc */
+@keyframes snakeHue {
+  from { filter: hue-rotate(0deg) drop-shadow(0 0 8px rgba(255,255,255,0.55)) drop-shadow(0 0 14px rgba(0,180,255,0.45)); }
+  to   { filter: hue-rotate(360deg) drop-shadow(0 0 8px rgba(255,255,255,0.55)) drop-shadow(0 0 14px rgba(0,180,255,0.45)); }
 }
+
 /* ==========================================================
-   ✅ KẾT THÚC VIỀN LED ĐUỔI NHAU
+   ✅ KẾT THÚC VIỀN LED "CON RẮN RGB"
    ========================================================== */
