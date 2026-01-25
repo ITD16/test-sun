@@ -52,8 +52,6 @@
         if (!res.ok) throw new Error("Không load được config.json");
         const cfg = await res.json();
 
-        if (cfg.title) document.title = cfg.title;
-
         const domains = cfg.domains789 || [];
         document.getElementById("domain1").textContent = domains[0] || "";
 
