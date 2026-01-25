@@ -105,58 +105,64 @@ canvas {
 }
 
 /* ==========================================================
-   ✅ VIỀN LED HẠT RGB CHẠY ĐUỔI (INDEX 789)
-   - Viền mỏng hơn
-   - Hạt chạy vòng
-   - Chỉ hạt màu (không glow/nền)
-   - Chạy chậm
+   ✅ VIỀN LED "CON RẮN RGB" CHẠY ĐUỔI QUANH KHUNG (INDEX 789)
    ========================================================== */
 
-/* SVG phủ ngoài */
+/* Khung SVG phủ ngoài */
 .led-border {
   position: fixed;
-  inset: 14px;                 /* ✅ viền vào trong nhiều hơn => nhìn nhỏ lại */
-  width: calc(100% - 28px);
-  height: calc(100% - 28px);
+  inset: 10px;                          /* khoảng cách viền vào trong */
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
   z-index: 99999;
   pointer-events: none;
 }
 
-/* ✅ HẠT LED chạy */
-.led-dots {
+/* Glow nền mờ */
+.led-glow {
   fill: none;
-  stroke: url(#rgbDots);
+  stroke: url(#snakeRGB);
+  stroke-width: 3;
+  opacity: 0.25;
+  filter: drop-shadow(0 0 10px rgba(255, 0, 140, 0.35))
+          drop-shadow(0 0 16px rgba(0, 180, 255, 0.25));
+}
 
-  /* ✅ Viền nhỏ lại */
-  stroke-width: 1.5;
-
-  /* ✅ hạt tròn */
+/* ✅ Con rắn RGB chạy */
+.led-snake {
+  fill: none;
+  stroke: url(#snakeRGB);
+  stroke-width: 5.5;
   stroke-linecap: round;
 
   /*
-    ✅ DOT PATTERN
-    0.9 = độ dài hạt sáng
-    4.6 = khoảng trống giữa hạt
-    (Muốn hạt dày hơn: tăng 0.9 lên 1.2)
+    Rect 96x96 => chu vi ~ 384
+    snakeLen = 80 (độ dài con rắn)
+    gap      = 304 (phần tắt)
+    => 1 con rắn chạy vòng quanh
   */
-  stroke-dasharray: 0.9 4.6;
+  stroke-dasharray: 80 304;
 
-  /* Chu vi rect ~ 384 => chạy đúng 1 vòng */
-  animation: dotsRun 11s linear infinite, dotsHue 3s linear infinite;
+  /* chạy */
+  animation: snakeRun 1.0s linear infinite, snakeHue 2.4s linear infinite;
+
+  /* glow xịn hơn */
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.55))
+          drop-shadow(0 0 14px rgba(0, 180, 255, 0.45));
 }
 
-/* ✅ chạy chậm vòng quanh */
-@keyframes dotsRun {
+/* chạy vòng quanh viền */
+@keyframes snakeRun {
   from { stroke-dashoffset: 0; }
   to   { stroke-dashoffset: -384; }
 }
 
-/* ✅ đổi màu bảy sắc mượt */
-@keyframes dotsHue {
-  from { filter: hue-rotate(0deg); }
-  to   { filter: hue-rotate(360deg); }
+/* đổi màu mượt kiểu bảy sắc */
+@keyframes snakeHue {
+  from { filter: hue-rotate(0deg) drop-shadow(0 0 8px rgba(255,255,255,0.55)) drop-shadow(0 0 14px rgba(0,180,255,0.45)); }
+  to   { filter: hue-rotate(360deg) drop-shadow(0 0 8px rgba(255,255,255,0.55)) drop-shadow(0 0 14px rgba(0,180,255,0.45)); }
 }
 
 /* ==========================================================
-   ✅ KẾT THÚC VIỀN LED HẠT RGB
+   ✅ KẾT THÚC VIỀN LED "CON RẮN RGB"
    ========================================================== */
