@@ -1,5 +1,4 @@
- <!-- ✅ Snake LED engine (đúng kiểu con rắn hạt) -->
-  <script>
+
     (function ledSnakeDots() {
       const path = document.getElementById("ledPath");
       const dotsGroup = document.getElementById("ledDots");
@@ -64,4 +63,3 @@
 
       requestAnimationFrame(frame);
     })();
-  </script>
