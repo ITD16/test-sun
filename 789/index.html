@@ -10,11 +10,11 @@
   <!-- gọi chạy pháo hoa -->
   <canvas id="canvas"></canvas>
 
-  <!-- ✅ LED "con rắn RGB" chạy vòng quanh viền -->
+  <!-- ✅ LED hạt RGB chạy vòng quanh viền -->
   <svg class="led-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
     <defs>
-      <!-- Gradient RGB bảy sắc -->
-      <linearGradient id="snakeRGB" x1="0%" y1="0%" x2="100%" y2="0%">
+      <!-- Rainbow bảy sắc -->
+      <linearGradient id="rgbDots" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%"   stop-color="#ff004c"/>
         <stop offset="16%"  stop-color="#ffcc00"/>
         <stop offset="33%"  stop-color="#00ff88"/>
@@ -25,11 +25,8 @@
       </linearGradient>
     </defs>
 
-    <!-- Glow mờ nền (để sang hơn) -->
-    <rect class="led-glow" x="2" y="2" width="96" height="96" rx="10" ry="10"></rect>
-
-    <!-- Con rắn chạy -->
-    <rect class="led-snake" x="2" y="2" width="96" height="96" rx="10" ry="10"></rect>
+    <!-- Chỉ có hạt chạy -->
+    <rect class="led-dots" x="2" y="2" width="96" height="96" rx="10" ry="10"></rect>
   </svg>
 
   <!-- Hai dòng domain, sẽ được gán text bằng JS -->
@@ -55,19 +52,15 @@
 
         const cfg = await res.json();
 
-        // Set title
         if (cfg.title) document.title = cfg.title;
 
-        // Set domain
         const domains = cfg.domains789 || [];
         document.getElementById("domain1").textContent = domains[0] || "";
 
-        // Bật pháo hoa
         if (cfg.enableFirework === true && !window._fireworkStarted) {
           window._fireworkStarted = false;
           // startFirework();
         }
-
       } catch (e) {
         console.error(e);
       }
