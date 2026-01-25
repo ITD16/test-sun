@@ -13,7 +13,6 @@
   <!-- Hai dòng domain, sẽ được gán text bằng JS -->
    <div class="content">
     <h1 class="autofit" id="domain1"></h1>
-    <h1 class="autofit" id="domain2"></h1>
     <!-- Đồng hồ GMT+7 -->
     <div id="clock-container">
       <div id="clock-line">--:--:-- - --/--/----</div>
@@ -41,9 +40,8 @@ async function applyConfig() {
     }
 
     // Set domain
-    const domains = cfg.domains || [];
+    const domains = cfg.domains789 || [];
     document.getElementById("domain1").textContent = domains[0] || "";
-    document.getElementById("domain2").textContent = domains[1] || "";
 
     // Bật pháo hoa
     if (cfg.enableFirework === true && !window._fireworkStarted) {
