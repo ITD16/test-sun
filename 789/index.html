@@ -9,63 +9,53 @@
 <body>
   <!-- gọi chạy pháo hoa -->
   <canvas id="canvas"></canvas>
-  
-  <!-- LED border chạy vòng quanh màn hình -->
-  <div class="led-frame"></div>
-  
+
+  <!-- LED chạy vòng quanh màn hình -->
+  <div class="led-frame" aria-hidden="true"></div>
+
   <!-- Hai dòng domain, sẽ được gán text bằng JS -->
-   <div class="content">
+  <div class="content">
     <h1 class="autofit" style="margin:0 0 30px 0;" id="domain1"></h1>
+
     <!-- Đồng hồ GMT+7 -->
     <div id="clock-container">
       <div id="clock-line">--:--:-- - --/--/----</div>
     </div>
-   </div>
+  </div>
+
   <script src="../js/firework.js"></script>
   <script src="../js/oclock.js"></script>
-    <script>
-const CONFIG_URL = "../config.json";
 
-async function applyConfig() {
-  try {
-    const res = await fetch(CONFIG_URL + "?t=" + Date.now(), { cache: "no-cache" });
-    if (!res.ok) throw new Error("Không load được config.json");
+  <script>
+    const CONFIG_URL = "../config.json";
 
-    const cfg = await res.json();
+    async function applyConfig() {
+      try {
+        const res = await fetch(CONFIG_URL + "?t=" + Date.now(), { cache: "no-cache" });
+        if (!res.ok) throw new Error("Không load được config.json");
 
-    // Set title
-    if (cfg.title) {
-      document.title = cfg.title;
+        const cfg = await res.json();
+
+        if (cfg.title) document.title = cfg.title;
+
+        const domains = cfg.domains789 || [];
+        document.getElementById("domain1").textContent = domains[0] || "";
+
+        if (cfg.enableFirework === true && !window._fireworkStarted) {
+          window._fireworkStarted = false;
+          // startFirework();
+        }
+      } catch (e) {
+        console.error(e);
+      }
     }
 
-    // Set domain
-    const domains = cfg.domains789 || [];
-    document.getElementById("domain1").textContent = domains[0] || "";
-
-    // Bật pháo hoa
-    if (cfg.enableFirework === true && !window._fireworkStarted) {
-      window._fireworkStarted = false;
-      // startFirework();
-    }
-
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-// Lần đầu
-applyConfig();
-
-// Reload config mỗi 10s
-setInterval(applyConfig, 10000);
-</script>
-
-
+    applyConfig();
+    setInterval(applyConfig, 10000);
+  </script>
 
   <!-- Chạy script Double Fullscreen -->
   <script src="../js/fullscreen.js"></script> 
-  
-
 
   <!-- Tự động co chữ theo độ dài -->
   <script src="../js/autofit.js" defer></script>
