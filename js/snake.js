@@ -10,7 +10,7 @@
       const DOT_COUNT = 15;        // ✅ số hạt (mày muốn 10)
       const DOT_RADIUS = 1.25;     // ✅ size hạt (nhỏ lại cho đẹp)
       const SPACING = 5;          // ✅ khoảng cách giữa các hạt (độ dài theo đường chạy)
-      const SPEED = 170;            // ✅ tốc độ chạy (càng nhỏ càng chậm)
+      const SPEED = 140;            // ✅ tốc độ chạy (càng nhỏ càng chậm)
       const HUE_SPEED = 60;        // ✅ tốc độ đổi màu 7 sắc
       const FADE_TAIL = true;      // ✅ đuôi mờ dần (true/false)
       // =================================
