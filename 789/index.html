@@ -10,8 +10,27 @@
   <!-- gọi chạy pháo hoa -->
   <canvas id="canvas"></canvas>
 
-  <!-- LED chạy vòng quanh màn hình -->
-  <div class="led-frame" aria-hidden="true"></div>
+  <!-- ✅ LED "con rắn RGB" chạy vòng quanh viền -->
+  <svg class="led-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <!-- Gradient RGB bảy sắc -->
+      <linearGradient id="snakeRGB" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#ff004c"/>
+        <stop offset="16%"  stop-color="#ffcc00"/>
+        <stop offset="33%"  stop-color="#00ff88"/>
+        <stop offset="50%"  stop-color="#00aaff"/>
+        <stop offset="66%"  stop-color="#9b00ff"/>
+        <stop offset="83%"  stop-color="#ff6bd6"/>
+        <stop offset="100%" stop-color="#ff004c"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Glow mờ nền (để sang hơn) -->
+    <rect class="led-glow" x="2" y="2" width="96" height="96" rx="10" ry="10"></rect>
+
+    <!-- Con rắn chạy -->
+    <rect class="led-snake" x="2" y="2" width="96" height="96" rx="10" ry="10"></rect>
+  </svg>
 
   <!-- Hai dòng domain, sẽ được gán text bằng JS -->
   <div class="content">
@@ -36,15 +55,19 @@
 
         const cfg = await res.json();
 
+        // Set title
         if (cfg.title) document.title = cfg.title;
 
+        // Set domain
         const domains = cfg.domains789 || [];
         document.getElementById("domain1").textContent = domains[0] || "";
 
+        // Bật pháo hoa
         if (cfg.enableFirework === true && !window._fireworkStarted) {
           window._fireworkStarted = false;
           // startFirework();
         }
+
       } catch (e) {
         console.error(e);
       }
@@ -55,7 +78,7 @@
   </script>
 
   <!-- Chạy script Double Fullscreen -->
-  <script src="../js/fullscreen.js"></script> 
+  <script src="../js/fullscreen.js"></script>
 
   <!-- Tự động co chữ theo độ dài -->
   <script src="../js/autofit.js" defer></script>
