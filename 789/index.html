@@ -1,1 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sun</title>
+  <link rel="stylesheet" href="../css/config.css">
+</head>
+<body>
+  <!-- gọi chạy pháo hoa -->
+  <canvas id="canvas"></canvas>
 
+  <!-- Hai dòng domain, sẽ được gán text bằng JS -->
+   <div class="content">
+    <h1 class="autofit" id="domain1"></h1>
+    <h1 class="autofit" id="domain2"></h1>
+    <!-- Đồng hồ GMT+7 -->
+    <div id="clock-container">
+      <div id="clock-line">--:--:-- - --/--/----</div>
+    </div>
+   </div>
+
+
+
+  
+  <script src="../js/firework.js"></script>
+  <script src="../js/oclock.js"></script>
+    <script>
+const CONFIG_URL = "../config.json";
+
+async function applyConfig() {
+  try {
+    const res = await fetch(CONFIG_URL + "?t=" + Date.now(), { cache: "no-cache" });
+    if (!res.ok) throw new Error("Không load được config.json");
+
+    const cfg = await res.json();
+
+    // Set title
+    if (cfg.title) {
+      document.title = cfg.title;
+    }
+
+    // Set domain
+    const domains = cfg.domains || [];
+    document.getElementById("domain1").textContent = domains[0] || "";
+    document.getElementById("domain2").textContent = domains[1] || "";
+
+    // Bật pháo hoa
+    if (cfg.enableFirework === true && !window._fireworkStarted) {
+      window._fireworkStarted = true;
+      startFirework();
+    }
+
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// Lần đầu
+applyConfig();
+
+// Reload config mỗi 10s
+setInterval(applyConfig, 10000);
+</script>
+
+
+
+  <!-- Chạy script Double Fullscreen -->
+  <script src="../js/fullscreen.js"></script> 
+  
+
+
+  <!-- Tự động co chữ theo độ dài -->
+  <script src="../js/autofit.js" defer></script>
+</body>
+</html>
