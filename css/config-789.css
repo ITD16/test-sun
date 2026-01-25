@@ -21,8 +21,8 @@ html, body {
 /* Không cho chọn chữ */
 body, h1 {
   user-select: none;
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none;     /* IE/Edge */
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 /* Căn giữa nội dung và cách dòng */
@@ -34,22 +34,21 @@ body {
   gap: 2vh;
 }
 
-/* H1: font Impact, màu cam, responsive size */
-
- h1.old {
+/* H1: responsive size */
+h1.old {
   font-family: 'ImpactLocal', sans-serif;
   color: #ff3c00;
   font-weight: 900;
   text-align: center;
-  line-height: 1; /* Khoảng cách giữa 2 hàng chữ */
-  transform: scaleY(1); /* ✅ làm chữ cao hơn */
-  transform: scaleX(1); /* ✅ làm chữ dày hơn */
-  letter-spacing: 0em; /* hoặc px nếu bạn muốn cố định */
+  line-height: 1;
+  transform: scaleY(1);
+  transform: scaleX(1);
+  letter-spacing: 0em;
   display: inline-block;
-  font-size: clamp(32px, 14vw, 220px); /* chỉnh cỡ chữ h1 - clamp: min, cỡ chữ theo chiều rộng màn hình (14%), max */
-  position: relative; /* hoặc absolute nếu bạn cần đặt cụ thể */
-  z-index: 1;          /* cao hơn canvas */
-} 
+  font-size: clamp(32px, 14vw, 220px);
+  position: relative;
+  z-index: 1;
+}
 
 .autofit {
   font-family: 'ImpactLocal', Impact, sans-serif;
@@ -72,14 +71,11 @@ canvas {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0; /* thấp nhất */
-  pointer-events: none; /* không chặn tương tác */
+  z-index: 0;
+  pointer-events: none;
 }
 
-
-
 /* Xử lý đồng hồ */
-
 #clock-container {
   display: inline-block;
   width: 100%;
@@ -104,73 +100,79 @@ canvas {
 
 /* khoảng cách tương đương 1 tab */
 .clock-gap {
-  width: 1.5em;   /* ~ 1 tab thị giác */
+  width: 1.5em;
   flex-shrink: 0;
 }
 
-/* CSS CHO VIỀN LED INDEX 789 */
-/* LED border chạy vòng quanh viền ngoài */
+/* ==========================================================
+   ✅ VIỀN LED ĐUỔI NHAU (INDEX 789) - CHỈ THAY ĐOẠN NÀY
+   ========================================================== */
 .led-frame {
   position: fixed;
-  inset: 10px;              /* khoảng cách viền vào trong */
-  border-radius: 24px;      /* bo góc */
+  inset: 10px;                 /* khoảng cách viền vào trong */
+  border-radius: 24px;         /* bo góc */
   pointer-events: none;
-  z-index: 99999;           /* nổi lên trên */
+  z-index: 99999;
 }
 
-/* lớp màu RGB chạy vòng */
+/* Lớp LED chạy dạng "hạt đuổi" */
 .led-frame::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
 
-  /* RGB vòng tròn */
-  background: conic-gradient(
-    from 0deg,
-    #ff004c,
-    #ffcc00,
-    #00ff88,
-    #00aaff,
-    #9b00ff,
-    #ff004c
+  /* độ dày của viền LED */
+  padding: 6px;
+
+  /* ✅ Pattern hạt LED chạy: sáng (1) + tắt (2.2) */
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 0, 76, 1) 0px,
+    rgba(255, 0, 76, 1) 8px,
+    rgba(0, 0, 0, 0) 14px,
+    rgba(0, 0, 0, 0) 22px
   );
 
-  /* làm viền sáng hơn */
-  filter: blur(2px);
-  opacity: 0.95;
+  /* ✅ đổi màu RGB theo thời gian */
+  filter: hue-rotate(0deg) blur(0.6px);
+  animation: ledChase 0.55s linear infinite, ledHue 2.5s linear infinite;
 
-  /* chỉ hiển thị phần "border", không che nội dung */
-  padding: 6px; /* độ dày led */
-  -webkit-mask: 
-    linear-gradient(#000 0 0) content-box, 
+  /* chỉ hiển thị border, không che phần trong */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
 
-  mask: 
-    linear-gradient(#000 0 0) content-box, 
+  mask:
+    linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
-
-  animation: ledSpin 2.2s linear infinite;
 }
 
-/* Glow nhẹ xung quanh */
+/* Glow nhẹ bên ngoài cho đẹp */
 .led-frame::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   box-shadow:
-    0 0 18px rgba(255, 0, 76, 0.35),
-    0 0 28px rgba(0, 170, 255, 0.28),
-    0 0 40px rgba(155, 0, 255, 0.25);
-  pointer-events: none;
+    0 0 14px rgba(255, 0, 90, 0.30),
+    0 0 22px rgba(0, 180, 255, 0.22),
+    0 0 34px rgba(170, 0, 255, 0.18);
 }
 
-@keyframes ledSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+/* ✅ chạy đuổi: dịch pattern */
+@keyframes ledChase {
+  from { background-position: 0 0; }
+  to   { background-position: 44px 0; }
 }
 
-/* KẾT THÚC VIỀN LED INDEX 789 */
+/* ✅ RGB tự chạy */
+@keyframes ledHue {
+  from { filter: hue-rotate(0deg) blur(0.6px); }
+  to   { filter: hue-rotate(360deg) blur(0.6px); }
+}
+/* ==========================================================
+   ✅ KẾT THÚC VIỀN LED ĐUỔI NHAU
+   ========================================================== */
