@@ -142,7 +142,7 @@ canvas {
   stroke-dasharray: 0.9 4.6;
 
   /* Chu vi rect ~ 384 => chạy đúng 1 vòng */
-  animation: dotsRun 5s linear infinite, dotsHue 9s linear infinite;
+  animation: dotsRun 7s linear infinite, dotsHue 15s linear infinite;
 }
 
 /* ✅ chạy chậm vòng quanh */
