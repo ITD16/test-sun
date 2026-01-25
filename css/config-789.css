@@ -1,168 +1,56 @@
-/* @font-face {
-  font-family: 'ImpactLocal';
-  src: url('../font/impact/impact.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-} */
-
-/* Reset cơ bản */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Body + HTML */
-html, body {
-  height: 100%;
-  background-color: #000;
-}
-
-/* Không cho chọn chữ */
-body, h1 {
-  user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-}
-
-/* Căn giữa nội dung và cách dòng */
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 2vh;
-}
-
-/* H1: responsive size */
-h1.old {
-  font-family: 'ImpactLocal', sans-serif;
-  color: #ff3c00;
-  font-weight: 900;
-  text-align: center;
-  line-height: 1;
-  transform: scaleY(1);
-  transform: scaleX(1);
-  letter-spacing: 0em;
-  display: inline-block;
-  font-size: clamp(32px, 14vw, 220px);
-  position: relative;
-  z-index: 1;
-}
-
-.autofit {
-  font-family: 'ImpactLocal', Impact, sans-serif;
-  color: #ff3c00;
-  font-weight: 900;
-  text-align: center;
-  line-height: 1;
-  letter-spacing: 0;
-  display: block;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Xử lý đồng hồ */
-#clock-container {
-  display: inline-block;
-  width: 100%;
-  text-align: center;
-  pointer-events: none;
-  overflow: hidden;
-  position: relative;
-}
-
-#clock-line {
-  display: inline-flex;
-  align-items: center;
-  max-width: 95vw;
-  white-space: nowrap;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 600;
-  font-size: 6.5rem;
-  color: #ffffff;
-  line-height: 1.2;
-  margin-bottom: 10px;
-}
-
-/* khoảng cách tương đương 1 tab */
-.clock-gap {
-  width: 1.5em;
-  flex-shrink: 0;
-}
-
 /* ==========================================================
-   ✅ VIỀN LED "CON RẮN RGB" CHẠY ĐUỔI QUANH KHUNG (INDEX 789)
+   ✅ VIỀN LED HẠT RGB CHẠY ĐUỔI (INDEX 789)
+   - Viền mỏng hơn
+   - Hạt chạy vòng
+   - Chỉ hạt màu (không glow/nền)
+   - Chạy chậm
    ========================================================== */
 
-/* Khung SVG phủ ngoài */
+/* SVG phủ ngoài */
 .led-border {
   position: fixed;
-  inset: 10px;                          /* khoảng cách viền vào trong */
-  width: calc(100% - 20px);
-  height: calc(100% - 20px);
+  inset: 14px;                 /* ✅ viền vào trong nhiều hơn => nhìn nhỏ lại */
+  width: calc(100% - 28px);
+  height: calc(100% - 28px);
   z-index: 99999;
   pointer-events: none;
 }
 
-/* Glow nền mờ */
-.led-glow {
+/* ✅ HẠT LED chạy */
+.led-dots {
   fill: none;
-  stroke: url(#snakeRGB);
-  stroke-width: 3;
-  opacity: 0.25;
-  filter: drop-shadow(0 0 10px rgba(255, 0, 140, 0.35))
-          drop-shadow(0 0 16px rgba(0, 180, 255, 0.25));
-}
+  stroke: url(#rgbDots);
 
-/* ✅ Con rắn RGB chạy */
-.led-snake {
-  fill: none;
-  stroke: url(#snakeRGB);
-  stroke-width: 5.5;
+  /* ✅ Viền nhỏ lại */
+  stroke-width: 2.4;
+
+  /* ✅ hạt tròn */
   stroke-linecap: round;
 
   /*
-    Rect 96x96 => chu vi ~ 384
-    snakeLen = 80 (độ dài con rắn)
-    gap      = 304 (phần tắt)
-    => 1 con rắn chạy vòng quanh
+    ✅ DOT PATTERN
+    0.9 = độ dài hạt sáng
+    4.6 = khoảng trống giữa hạt
+    (Muốn hạt dày hơn: tăng 0.9 lên 1.2)
   */
-  stroke-dasharray: 80 304;
+  stroke-dasharray: 0.9 4.6;
 
-  /* chạy */
-  animation: snakeRun 1.0s linear infinite, snakeHue 2.4s linear infinite;
-
-  /* glow xịn hơn */
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.55))
-          drop-shadow(0 0 14px rgba(0, 180, 255, 0.45));
+  /* Chu vi rect ~ 384 => chạy đúng 1 vòng */
+  animation: dotsRun 3.2s linear infinite, dotsHue 6s linear infinite;
 }
 
-/* chạy vòng quanh viền */
-@keyframes snakeRun {
+/* ✅ chạy chậm vòng quanh */
+@keyframes dotsRun {
   from { stroke-dashoffset: 0; }
   to   { stroke-dashoffset: -384; }
 }
 
-/* đổi màu mượt kiểu bảy sắc */
-@keyframes snakeHue {
-  from { filter: hue-rotate(0deg) drop-shadow(0 0 8px rgba(255,255,255,0.55)) drop-shadow(0 0 14px rgba(0,180,255,0.45)); }
-  to   { filter: hue-rotate(360deg) drop-shadow(0 0 8px rgba(255,255,255,0.55)) drop-shadow(0 0 14px rgba(0,180,255,0.45)); }
+/* ✅ đổi màu bảy sắc mượt */
+@keyframes dotsHue {
+  from { filter: hue-rotate(0deg); }
+  to   { filter: hue-rotate(360deg); }
 }
 
 /* ==========================================================
-   ✅ KẾT THÚC VIỀN LED "CON RẮN RGB"
+   ✅ KẾT THÚC VIỀN LED HẠT RGB
    ========================================================== */
