@@ -52,7 +52,6 @@ h1.old {
 
 .autofit {
   font-family: 'ImpactLocal', Impact, sans-serif;
-  color: #c0d5f4;
   font-weight: 900;
   text-align: center;
   line-height: 1;
@@ -63,7 +62,15 @@ h1.old {
   z-index: 1;
   white-space: nowrap;
   overflow: hidden;
+
+  /* ✅ Gradient chữ: trên trắng - dưới xanh */
+  background: linear-gradient(to bottom, #ffffff 0%, #6694d0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent; /* Safari/Chrome */
 }
+
 
 canvas {
   position: fixed;
