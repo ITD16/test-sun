@@ -37,7 +37,7 @@ body {
 /* H1: responsive size */
 h1.old {
   font-family: 'ImpactLocal', sans-serif;
-  color: #f0a3f0;
+  color: #c0d5f4;
   font-weight: 900;
   text-align: center;
   line-height: 1;
@@ -52,7 +52,7 @@ h1.old {
 
 .autofit {
   font-family: 'ImpactLocal', Impact, sans-serif;
-  color: #f0a3f0;
+  color: #c0d5f4;
   font-weight: 900;
   text-align: center;
   line-height: 1;
