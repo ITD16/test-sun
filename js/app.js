@@ -20,6 +20,10 @@ const els = {
   logoutBtn: document.getElementById("logoutBtn")
 };
 
+function isAdmin() {
+  return (currentMe?.role || "user") === "admin";
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -41,7 +45,10 @@ function createDomainRow(value = "") {
   btn.type = "button";
   btn.className = "danger";
   btn.textContent = "X";
+  btn.style.display = isAdmin() ? "" : "none";
+
   btn.addEventListener("click", () => {
+    if (!isAdmin()) return;
     row.remove();
     resetIdleTimer();
   });
@@ -78,6 +85,18 @@ function renderConfig(config) {
   renderDomainList(els.domains1bList, config.domains1b || []);
   renderDomainList(els.domains789List, config.domains789 || []);
   renderDomainList(els.domains0bList, config.domains0b || []);
+}
+
+function applyRoleUi() {
+  const admin = isAdmin();
+
+  document.querySelectorAll("[data-add]").forEach(btn => {
+    btn.style.display = admin ? "" : "none";
+  });
+
+  document.querySelectorAll(".domain-row button.danger").forEach(btn => {
+    btn.style.display = admin ? "" : "none";
+  });
 }
 
 async function doAutoLogout() {
@@ -127,6 +146,7 @@ async function ensureMe() {
   if (els.meBox) {
     els.meBox.textContent = `User: ${data.username} (${data.role || "user"})`;
   }
+  applyRoleUi();
 }
 
 async function loadConfig() {
@@ -147,6 +167,7 @@ async function loadConfig() {
   const data = await res.json();
   originalConfig = data.config || {};
   renderConfig(originalConfig);
+  applyRoleUi();
 }
 
 async function loadLogs() {
@@ -241,6 +262,8 @@ async function saveConfig() {
 
 document.querySelectorAll("[data-add]").forEach(btn => {
   btn.addEventListener("click", () => {
+    if (!isAdmin()) return;
+
     const key = btn.getAttribute("data-add");
     const map = {
       domains1b: els.domains1bList,
