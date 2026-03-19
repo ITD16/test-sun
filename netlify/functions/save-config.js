@@ -54,14 +54,10 @@ exports.handler = async (event) => {
     const oldConfigFile = await getRepoFile(configPath);
     const before = JSON.parse(oldConfigFile.content || "{}");
     const after = nextConfig;
-
     const changes = buildDiff(before, after);
 
     if (!Object.keys(changes).length) {
-      return json(200, {
-        ok: true,
-        message: "No changes"
-      });
+      return json(200, { ok: true, message: "No changes", changes: {} });
     }
 
     const configContent = JSON.stringify(after, null, 2) + "\n";
