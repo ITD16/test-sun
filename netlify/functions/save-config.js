@@ -1,11 +1,13 @@
 const { json, authRequired, getRepoFile, putRepoFile, repoInfo } = require("./_utils");
 
 function normalizeDomains(arr) {
-  return Array.from(new Set(
-    (Array.isArray(arr) ? arr : [])
-      .map(x => String(x || "").trim().toUpperCase())
-      .filter(Boolean)
-  ));
+  return Array.from(
+    new Set(
+      (Array.isArray(arr) ? arr : [])
+        .map(x => String(x || "").trim().toUpperCase())
+        .filter(Boolean)
+    )
+  );
 }
 
 function normalizeConfig(config) {
@@ -15,6 +17,25 @@ function normalizeConfig(config) {
     domains789: normalizeDomains(config.domains789),
     domains0b: normalizeDomains(config.domains0b)
   };
+}
+
+function isEqual(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function buildDiff(before, after) {
+  const changed = {};
+
+  for (const key of Object.keys(after)) {
+    if (!isEqual(before[key], after[key])) {
+      changed[key] = {
+        before: before[key],
+        after: after[key]
+      };
+    }
+  }
+
+  return changed;
 }
 
 exports.handler = async (event) => {
@@ -34,16 +55,26 @@ exports.handler = async (event) => {
     const before = JSON.parse(oldConfigFile.content || "{}");
     const after = nextConfig;
 
+    const changes = buildDiff(before, after);
+
+    if (!Object.keys(changes).length) {
+      return json(200, {
+        ok: true,
+        message: "No changes"
+      });
+    }
+
     const configContent = JSON.stringify(after, null, 2) + "\n";
     const configResult = await putRepoFile(
       configPath,
       configContent,
-      `update config by ${auth.username}`,
+      `update config by ${auth.session.username}`,
       oldConfigFile.sha
     );
 
     let oldLogSha = null;
     let oldLogs = "";
+
     try {
       const logFile = await getRepoFile(logPath);
       oldLogSha = logFile.sha;
@@ -54,24 +85,27 @@ exports.handler = async (event) => {
 
     const logLine = JSON.stringify({
       time: new Date().toISOString(),
-      user: auth.username,
+      user: auth.session.username,
+      role: auth.session.role || "user",
       action: "update_config",
-      before,
-      after
+      changes
     });
 
-    const newLogs = oldLogs ? `${oldLogs.trimEnd()}\n${logLine}\n` : `${logLine}\n`;
+    const newLogs = oldLogs
+      ? `${oldLogs.trimEnd()}\n${logLine}\n`
+      : `${logLine}\n`;
 
     await putRepoFile(
       logPath,
       newLogs,
-      `append config log by ${auth.username}`,
+      `append config log by ${auth.session.username}`,
       oldLogSha || undefined
     );
 
     return json(200, {
       ok: true,
-      commitSha: configResult.commit?.sha || ""
+      commitSha: configResult.commit?.sha || "",
+      changes
     });
   } catch (err) {
     return json(500, { error: err.message || "Cannot save config" });
