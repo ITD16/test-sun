@@ -7,6 +7,7 @@ exports.handler = async (event) => {
   try {
     const { logPath } = repoInfo();
     let text = "";
+
     try {
       const file = await getRepoFile(logPath);
       text = file.content || "";
@@ -14,15 +15,24 @@ exports.handler = async (event) => {
       text = "";
     }
 
-    const logs = text
+    let logs = text
       .split(/\r?\n/)
       .map(x => x.trim())
       .filter(Boolean)
       .map(line => {
-        try { return JSON.parse(line); } catch { return null; }
+        try {
+          return JSON.parse(line);
+        } catch {
+          return null;
+        }
       })
-      .filter(Boolean)
-      .reverse();
+      .filter(Boolean);
+
+    if ((auth.session.role || "user") !== "admin") {
+      logs = logs.filter(x => x.user === auth.session.username);
+    }
+
+    logs.reverse();
 
     return json(200, { logs });
   } catch (err) {
