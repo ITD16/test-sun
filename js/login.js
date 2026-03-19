@@ -21,7 +21,7 @@ form?.addEventListener("submit", async (e) => {
       errBox.textContent = data.error || "Login failed";
       return;
     }
-    window.location.href = "/index.html";
+    window.location.href = "/admin.html";
   } catch (err) {
     errBox.textContent = err.message || "Network error";
   }
