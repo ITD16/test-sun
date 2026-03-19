@@ -55,13 +55,16 @@ function makeSession(user) {
 
 function verifySession(token) {
   if (!token || !token.includes(".")) return null;
+
   const secret = process.env.AUTH_SECRET || "change-this-secret";
   const [encoded, sig] = token.split(".");
   const expected = signValue(encoded, secret);
+
   if (sig !== expected) return null;
 
   const payload = JSON.parse(Buffer.from(encoded, "base64url").toString("utf8"));
   if (!payload.exp || payload.exp < Date.now()) return null;
+
   return payload;
 }
 
@@ -73,7 +76,9 @@ function getSession(event) {
 
 function authRequired(event) {
   const session = getSession(event);
-  if (!session) return { ok: false, response: json(401, { error: "Unauthorized" }) };
+  if (!session) {
+    return { ok: false, response: json(401, { error: "Unauthorized" }) };
+  }
   return { ok: true, session };
 }
 
@@ -106,7 +111,9 @@ async function githubRequest(url, options = {}) {
   });
 
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || `GitHub API error ${res.status}`);
+  if (!res.ok) {
+    throw new Error(data.message || `GitHub API error ${res.status}`);
+  }
   return data;
 }
 
@@ -117,13 +124,17 @@ function repoInfo() {
   const configPath = process.env.CONFIG_PATH || "config.json";
   const logPath = process.env.LOG_PATH || "data/change_logs.jsonl";
 
-  if (!owner || !repo) throw new Error("Missing GITHUB_OWNER or GITHUB_REPO");
+  if (!owner || !repo) {
+    throw new Error("Missing GITHUB_OWNER or GITHUB_REPO");
+  }
+
   return { owner, repo, branch, configPath, logPath };
 }
 
 async function getRepoFile(filePath) {
   const { owner, repo, branch } = repoInfo();
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}?ref=${branch}`;
+  const safePath = filePath.split("/").map(encodeURIComponent).join("/");
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${safePath}?ref=${encodeURIComponent(branch)}`;
   const data = await githubRequest(url);
   const content = Buffer.from(data.content || "", "base64").toString("utf8");
   return { sha: data.sha, content };
@@ -131,12 +142,15 @@ async function getRepoFile(filePath) {
 
 async function putRepoFile(filePath, content, message, sha) {
   const { owner, repo, branch } = repoInfo();
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+  const safePath = filePath.split("/").map(encodeURIComponent).join("/");
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${safePath}`;
+
   const body = {
     message,
     content: Buffer.from(content, "utf8").toString("base64"),
     branch
   };
+
   if (sha) body.sha = sha;
 
   return githubRequest(url, {
