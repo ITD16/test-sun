@@ -101,11 +101,54 @@ async function loadConfig() {
 async function loadLogs() {
   els.logsBox.innerHTML = "Loading...";
   const res = await fetch("/api/logs", { credentials: "include" });
+
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     els.logsBox.innerHTML = `<div class="error">${escapeHtml(data.error || "Cannot load logs")}</div>`;
     return;
   }
+
+  const data = await res.json();
+  const logs = Array.isArray(data.logs) ? data.logs : [];
+
+  if (!logs.length) {
+    els.logsBox.innerHTML = `<div class="muted">Chưa có log</div>`;
+    return;
+  }
+
+  els.logsBox.innerHTML = logs
+    .map(log => {
+      const changesHtml = Object.entries(log.changes || {})
+        .map(([key, value]) => `
+          <div class="log-change">
+            <div><strong>${escapeHtml(key)}</strong></div>
+            <div class="log-grid">
+              <div>
+                <div class="muted">Before</div>
+                <pre>${escapeHtml(JSON.stringify(value.before, null, 2))}</pre>
+              </div>
+              <div>
+                <div class="muted">After</div>
+                <pre>${escapeHtml(JSON.stringify(value.after, null, 2))}</pre>
+              </div>
+            </div>
+          </div>
+        `)
+        .join("");
+
+      return `
+        <div class="log-item">
+          <div class="log-meta">
+            <strong>${escapeHtml(log.user || "unknown")}</strong>
+            (${escapeHtml(log.role || "user")})
+            - ${escapeHtml(log.time || "")}
+          </div>
+          ${changesHtml || `<div class="muted">No detail</div>`}
+        </div>
+      `;
+    })
+    .join("");
+}
   const data = await res.json();
   const logs = Array.isArray(data.logs) ? data.logs : [];
   if (!logs.length) {
