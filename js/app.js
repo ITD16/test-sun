@@ -1,6 +1,9 @@
 let originalConfig = null;
 let currentMe = null;
 
+const IDLE_LIMIT_MS = 5 * 60 * 1000;
+let idleTimer = null;
+
 const els = {
   meBox: document.getElementById("meBox"),
   enableFirework: document.getElementById("enableFirework"),
@@ -38,7 +41,10 @@ function createDomainRow(value = "") {
   btn.type = "button";
   btn.className = "danger";
   btn.textContent = "X";
-  btn.addEventListener("click", () => row.remove());
+  btn.addEventListener("click", () => {
+    row.remove();
+    resetIdleTimer();
+  });
 
   row.appendChild(input);
   row.appendChild(btn);
@@ -72,6 +78,42 @@ function renderConfig(config) {
   renderDomainList(els.domains1bList, config.domains1b || []);
   renderDomainList(els.domains789List, config.domains789 || []);
   renderDomainList(els.domains0bList, config.domains0b || []);
+}
+
+async function doAutoLogout() {
+  try {
+    await fetch("/api/logout", {
+      method: "POST",
+      credentials: "include"
+    });
+  } catch (err) {
+    console.error("Auto logout failed:", err);
+  }
+  window.location.href = "/";
+}
+
+function resetIdleTimer() {
+  if (idleTimer) clearTimeout(idleTimer);
+  idleTimer = setTimeout(doAutoLogout, IDLE_LIMIT_MS);
+}
+
+function bindIdleEvents() {
+  const events = [
+    "mousemove",
+    "mousedown",
+    "click",
+    "scroll",
+    "keydown",
+    "touchstart",
+    "input",
+    "change"
+  ];
+
+  events.forEach(eventName => {
+    window.addEventListener(eventName, resetIdleTimer, { passive: true });
+  });
+
+  resetIdleTimer();
 }
 
 async function ensureMe() {
@@ -194,6 +236,7 @@ async function saveConfig() {
   }
 
   await loadLogs();
+  resetIdleTimer();
 }
 
 document.querySelectorAll("[data-add]").forEach(btn => {
@@ -205,15 +248,23 @@ document.querySelectorAll("[data-add]").forEach(btn => {
       domains0b: els.domains0bList
     };
     map[key]?.appendChild(createDomainRow(""));
+    resetIdleTimer();
   });
 });
 
 els.saveBtn?.addEventListener("click", saveConfig);
 els.resetBtn?.addEventListener("click", () => {
   if (originalConfig) renderConfig(originalConfig);
+  resetIdleTimer();
 });
-els.reloadBtn?.addEventListener("click", loadConfig);
-els.reloadLogsBtn?.addEventListener("click", loadLogs);
+els.reloadBtn?.addEventListener("click", async () => {
+  await loadConfig();
+  resetIdleTimer();
+});
+els.reloadLogsBtn?.addEventListener("click", async () => {
+  await loadLogs();
+  resetIdleTimer();
+});
 els.logoutBtn?.addEventListener("click", async () => {
   await fetch("/api/logout", { method: "POST", credentials: "include" });
   window.location.href = "/";
@@ -224,6 +275,7 @@ els.logoutBtn?.addEventListener("click", async () => {
     await ensureMe();
     await loadConfig();
     await loadLogs();
+    bindIdleEvents();
   } catch (err) {
     console.error(err);
     if (els.saveError) els.saveError.textContent = err.message || "Init failed";
