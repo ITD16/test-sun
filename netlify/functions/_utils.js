@@ -2,8 +2,17 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
-const USERS_PATH = path.join(process.cwd(), "data", "users.json");
 const COOKIE_NAME = "cfg_admin_session";
+
+function getUsersPath() {
+  const p1 = path.join(process.cwd(), "data", "users.json");
+  const p2 = path.join(__dirname, "..", "..", "data", "users.json");
+
+  if (fs.existsSync(p1)) return p1;
+  if (fs.existsSync(p2)) return p2;
+
+  return p1;
+}
 
 function json(statusCode, body, extraHeaders = {}) {
   return {
@@ -32,10 +41,11 @@ function signValue(value, secret) {
   return crypto.createHmac("sha256", secret).update(value).digest("hex");
 }
 
-function makeSession(username) {
+function makeSession(user) {
   const secret = process.env.AUTH_SECRET || "change-this-secret";
   const payload = JSON.stringify({
-    username,
+    username: user.username,
+    role: user.role || "user",
     exp: Date.now() + 1000 * 60 * 60 * 12
   });
   const encoded = Buffer.from(payload, "utf8").toString("base64url");
@@ -55,21 +65,20 @@ function verifySession(token) {
   return payload;
 }
 
-function getSessionUser(event) {
+function getSession(event) {
   const cookies = parseCookies(event);
   const token = cookies[COOKIE_NAME];
-  const payload = verifySession(token);
-  return payload ? payload.username : null;
+  return verifySession(token);
 }
 
 function authRequired(event) {
-  const username = getSessionUser(event);
-  if (!username) return { ok: false, response: json(401, { error: "Unauthorized" }) };
-  return { ok: true, username };
+  const session = getSession(event);
+  if (!session) return { ok: false, response: json(401, { error: "Unauthorized" }) };
+  return { ok: true, session };
 }
 
-function setSessionCookie(username) {
-  const token = makeSession(username);
+function setSessionCookie(user) {
+  const token = makeSession(user);
   return `${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Secure`;
 }
 
@@ -78,22 +87,24 @@ function clearSessionCookie() {
 }
 
 function readUsers() {
-  const text = fs.readFileSync(USERS_PATH, "utf8");
+  const text = fs.readFileSync(getUsersPath(), "utf8");
   return JSON.parse(text);
 }
 
 async function githubRequest(url, options = {}) {
   const token = process.env.GITHUB_TOKEN;
   if (!token) throw new Error("Missing GITHUB_TOKEN");
+
   const res = await fetch(url, {
     ...options,
     headers: {
-      "Authorization": `Bearer ${token}`,
-      "Accept": "application/vnd.github+json",
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.github+json",
       "Content-Type": "application/json",
       ...(options.headers || {})
     }
   });
+
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.message || `GitHub API error ${res.status}`);
   return data;
@@ -105,6 +116,7 @@ function repoInfo() {
   const branch = process.env.GITHUB_BRANCH || "main";
   const configPath = process.env.CONFIG_PATH || "config.json";
   const logPath = process.env.LOG_PATH || "data/change_logs.jsonl";
+
   if (!owner || !repo) throw new Error("Missing GITHUB_OWNER or GITHUB_REPO");
   return { owner, repo, branch, configPath, logPath };
 }
@@ -126,6 +138,7 @@ async function putRepoFile(filePath, content, message, sha) {
     branch
   };
   if (sha) body.sha = sha;
+
   return githubRequest(url, {
     method: "PUT",
     body: JSON.stringify(body)
