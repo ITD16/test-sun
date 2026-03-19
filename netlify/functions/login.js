@@ -1,4 +1,4 @@
-const { json, readUsers, setSessionCookie } = require("./_utils");
+const { json, readUsers, setSessionCookie, getClientIp } = require("./_utils");
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -6,7 +6,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { username, password } = JSON.parse(event.body || "{}");
+    const { username, password, deviceInfo } = JSON.parse(event.body || "{}");
     const users = readUsers();
 
     const found = users.find(
@@ -17,6 +17,8 @@ exports.handler = async (event) => {
       return json(401, { error: "Invalid username or password" });
     }
 
+    const ip = getClientIp(event);
+
     return json(
       200,
       {
@@ -25,7 +27,10 @@ exports.handler = async (event) => {
         role: found.role || "user"
       },
       {
-        "Set-Cookie": setSessionCookie(found)
+        "Set-Cookie": setSessionCookie(found, {
+          ip,
+          deviceInfo: String(deviceInfo || "").trim()
+        })
       }
     );
   } catch (err) {
