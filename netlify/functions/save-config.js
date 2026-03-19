@@ -83,6 +83,8 @@ exports.handler = async (event) => {
       time: new Date().toISOString(),
       user: auth.session.username,
       role: auth.session.role || "user",
+      ip: auth.session.ip || "",
+      deviceInfo: auth.session.deviceInfo || "",
       action: "update_config",
       changes
     });
