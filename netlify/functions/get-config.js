@@ -7,7 +7,7 @@ exports.handler = async (event) => {
   try {
     const { configPath } = repoInfo();
     const file = await getRepoFile(configPath);
-    const config = JSON.parse(file.content);
+    const config = JSON.parse(file.content || "{}");
     return json(200, { config });
   } catch (err) {
     return json(500, { error: err.message || "Cannot load config" });
