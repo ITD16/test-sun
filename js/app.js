@@ -78,7 +78,7 @@ async function ensureMe() {
     return;
   }
   const data = await res.json();
-  els.meBox.textContent = `User: ${data.username}`;
+  els.meBox.textContent = `User: ${data.username} (${data.role || "user"})`;
 }
 
 async function loadConfig() {
@@ -116,64 +116,36 @@ async function loadLogs() {
     return;
   }
 
-  els.logsBox.innerHTML = logs
-    .map(log => {
-      const changesHtml = Object.entries(log.changes || {})
-        .map(([key, value]) => `
-          <div class="log-change">
-            <div><strong>${escapeHtml(key)}</strong></div>
-            <div class="log-grid">
-              <div>
-                <div class="muted">Before</div>
-                <pre>${escapeHtml(JSON.stringify(value.before, null, 2))}</pre>
-              </div>
-              <div>
-                <div class="muted">After</div>
-                <pre>${escapeHtml(JSON.stringify(value.after, null, 2))}</pre>
-              </div>
+  els.logsBox.innerHTML = logs.map(log => {
+    const changesHtml = Object.entries(log.changes || {})
+      .map(([key, value]) => `
+        <div class="log-change">
+          <div><strong>${escapeHtml(key)}</strong></div>
+          <div class="log-grid">
+            <div>
+              <div class="muted">Before</div>
+              <pre>${escapeHtml(JSON.stringify(value.before, null, 2))}</pre>
+            </div>
+            <div>
+              <div class="muted">After</div>
+              <pre>${escapeHtml(JSON.stringify(value.after, null, 2))}</pre>
             </div>
           </div>
-        `)
-        .join("");
+        </div>
+      `)
+      .join("");
 
-      return `
-        <div class="log-item">
-          <div class="log-meta">
-            <strong>${escapeHtml(log.user || "unknown")}</strong>
-            (${escapeHtml(log.role || "user")})
-            - ${escapeHtml(log.time || "")}
-          </div>
-          ${changesHtml || `<div class="muted">No detail</div>`}
+    return `
+      <div class="log-item">
+        <div class="log-meta">
+          <strong>${escapeHtml(log.user || "unknown")}</strong>
+          (${escapeHtml(log.role || "user")})
+          - ${escapeHtml(log.time || "")}
         </div>
-      `;
-    })
-    .join("");
-}
-  const data = await res.json();
-  const logs = Array.isArray(data.logs) ? data.logs : [];
-  if (!logs.length) {
-    els.logsBox.innerHTML = `<div class="muted">Chưa có log</div>`;
-    return;
-  }
-
-  els.logsBox.innerHTML = logs.map(log => `
-    <div class="log-item">
-      <div class="log-meta">
-        <strong>${escapeHtml(log.user || "unknown")}</strong>
-        - ${escapeHtml(log.time || "")}
+        ${changesHtml || `<div class="muted">No detail</div>`}
       </div>
-      <div class="log-grid">
-        <div>
-          <div class="muted">Before</div>
-          <pre>${escapeHtml(JSON.stringify(log.before, null, 2))}</pre>
-        </div>
-        <div>
-          <div class="muted">After</div>
-          <pre>${escapeHtml(JSON.stringify(log.after, null, 2))}</pre>
-        </div>
-      </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
 async function saveConfig() {
