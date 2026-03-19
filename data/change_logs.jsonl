@@ -1,3 +1,4 @@
 
 {"time":"2026-03-19T04:27:42.722Z","user":"admin","action":"update_config","before":{"title":"Sun","enableFirework":true,"domains1b":["SUNWIN.PW","GEMWIN.IM"],"domains789":["789CLUB.SO"],"domains0b":["HITCLUB.SX","GO88.MN"]},"after":{"enableFirework":true,"domains1b":["SUNWIN.LD","GEMWIN.IM"],"domains789":["789CLUB.SO"],"domains0b":["HITCLUB.SX","GO88.MN"]}}
 {"time":"2026-03-19T04:27:44.596Z","user":"admin","action":"update_config","before":{"enableFirework":true,"domains1b":["SUNWIN.LD","GEMWIN.IM"],"domains789":["789CLUB.SO"],"domains0b":["HITCLUB.SX","GO88.MN"]},"after":{"enableFirework":true,"domains1b":["SUNWIN.LD","GEMWIN.IM"],"domains789":["789CLUB.SO"],"domains0b":["HITCLUB.SX","GO88.MN"]}}
+{"time":"2026-03-19T05:11:48.634Z","user":"user","role":"user","action":"update_config","changes":{"domains1b":{"before":["SUNWIN.LD","GEMWIN.IM"],"after":["SUNWIN.IT","GEMWIN.IM"]}}}
