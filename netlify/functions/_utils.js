@@ -10,7 +10,6 @@ function getUsersPath() {
 
   if (fs.existsSync(p1)) return p1;
   if (fs.existsSync(p2)) return p2;
-
   return p1;
 }
 
@@ -41,11 +40,22 @@ function signValue(value, secret) {
   return crypto.createHmac("sha256", secret).update(value).digest("hex");
 }
 
-function makeSession(user) {
+function getClientIp(event) {
+  return (
+    event.headers["x-nf-client-connection-ip"] ||
+    event.headers["client-ip"] ||
+    event.headers["x-forwarded-for"] ||
+    ""
+  ).split(",")[0].trim();
+}
+
+function makeSession(user, extra = {}) {
   const secret = process.env.AUTH_SECRET || "change-this-secret";
   const payload = JSON.stringify({
     username: user.username,
     role: user.role || "user",
+    ip: extra.ip || "",
+    deviceInfo: extra.deviceInfo || "",
     exp: Date.now() + 1000 * 60 * 60 * 12
   });
   const encoded = Buffer.from(payload, "utf8").toString("base64url");
@@ -82,8 +92,8 @@ function authRequired(event) {
   return { ok: true, session };
 }
 
-function setSessionCookie(user) {
-  const token = makeSession(user);
+function setSessionCookie(user, extra = {}) {
+  const token = makeSession(user, extra);
   return `${COOKIE_NAME}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Secure`;
 }
 
@@ -111,9 +121,7 @@ async function githubRequest(url, options = {}) {
   });
 
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    throw new Error(data.message || `GitHub API error ${res.status}`);
-  }
+  if (!res.ok) throw new Error(data.message || `GitHub API error ${res.status}`);
   return data;
 }
 
@@ -124,10 +132,7 @@ function repoInfo() {
   const configPath = process.env.CONFIG_PATH || "config.json";
   const logPath = process.env.LOG_PATH || "data/change_logs.jsonl";
 
-  if (!owner || !repo) {
-    throw new Error("Missing GITHUB_OWNER or GITHUB_REPO");
-  }
-
+  if (!owner || !repo) throw new Error("Missing GITHUB_OWNER or GITHUB_REPO");
   return { owner, repo, branch, configPath, logPath };
 }
 
@@ -167,5 +172,6 @@ module.exports = {
   authRequired,
   getRepoFile,
   putRepoFile,
-  repoInfo
+  repoInfo,
+  getClientIp
 };
