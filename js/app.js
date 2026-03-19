@@ -1,4 +1,78 @@
+let originalConfig = null;
 let currentMe = null;
+
+const els = {
+  meBox: document.getElementById("meBox"),
+  enableFirework: document.getElementById("enableFirework"),
+  domains1bList: document.getElementById("domains1bList"),
+  domains789List: document.getElementById("domains789List"),
+  domains0bList: document.getElementById("domains0bList"),
+  saveMessage: document.getElementById("saveMessage"),
+  saveError: document.getElementById("saveError"),
+  logsBox: document.getElementById("logsBox"),
+  saveBtn: document.getElementById("saveBtn"),
+  resetBtn: document.getElementById("resetBtn"),
+  reloadBtn: document.getElementById("reloadBtn"),
+  reloadLogsBtn: document.getElementById("reloadLogsBtn"),
+  logoutBtn: document.getElementById("logoutBtn")
+};
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function createDomainRow(value = "") {
+  const row = document.createElement("div");
+  row.className = "domain-row";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = value;
+  input.placeholder = "Example: SUNWIN.AG";
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "danger";
+  btn.textContent = "X";
+  btn.addEventListener("click", () => row.remove());
+
+  row.appendChild(input);
+  row.appendChild(btn);
+  return row;
+}
+
+function renderDomainList(container, items) {
+  if (!container) return;
+  container.innerHTML = "";
+  (items || []).forEach(item => container.appendChild(createDomainRow(item)));
+}
+
+function getDomainList(container) {
+  if (!container) return [];
+  return Array.from(container.querySelectorAll("input"))
+    .map(x => x.value.trim().toUpperCase())
+    .filter(Boolean);
+}
+
+function collectConfig() {
+  return {
+    enableFirework: !!els.enableFirework?.checked,
+    domains1b: getDomainList(els.domains1bList),
+    domains789: getDomainList(els.domains789List),
+    domains0b: getDomainList(els.domains0bList)
+  };
+}
+
+function renderConfig(config) {
+  if (els.enableFirework) els.enableFirework.checked = !!config.enableFirework;
+  renderDomainList(els.domains1bList, config.domains1b || []);
+  renderDomainList(els.domains789List, config.domains789 || []);
+  renderDomainList(els.domains0bList, config.domains0b || []);
+}
 
 async function ensureMe() {
   const res = await fetch("/api/me", { credentials: "include" });
@@ -8,10 +82,34 @@ async function ensureMe() {
   }
   const data = await res.json();
   currentMe = data;
-  els.meBox.textContent = `User: ${data.username} (${data.role || "user"})`;
+  if (els.meBox) {
+    els.meBox.textContent = `User: ${data.username} (${data.role || "user"})`;
+  }
+}
+
+async function loadConfig() {
+  if (els.saveError) els.saveError.textContent = "";
+  if (els.saveMessage) els.saveMessage.textContent = "";
+
+  const res = await fetch("/api/config", { credentials: "include" });
+
+  if (!res.ok) {
+    if (res.status === 401) {
+      window.location.href = "/";
+      return;
+    }
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Cannot load config");
+  }
+
+  const data = await res.json();
+  originalConfig = data.config || {};
+  renderConfig(originalConfig);
 }
 
 async function loadLogs() {
+  if (!els.logsBox) return;
+
   els.logsBox.innerHTML = "Loading...";
   const res = await fetch("/api/logs", { credentials: "include" });
 
@@ -70,3 +168,64 @@ async function loadLogs() {
     `;
   }).join("");
 }
+
+async function saveConfig() {
+  if (els.saveError) els.saveError.textContent = "";
+  if (els.saveMessage) els.saveMessage.textContent = "";
+
+  const config = collectConfig();
+  const res = await fetch("/api/config/save", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ config })
+  });
+
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    if (els.saveError) els.saveError.textContent = data.error || "Save failed";
+    return;
+  }
+
+  originalConfig = config;
+  if (els.saveMessage) {
+    els.saveMessage.textContent = data.message || `Saved ok. Commit: ${data.commitSha || ""}`;
+  }
+
+  await loadLogs();
+}
+
+document.querySelectorAll("[data-add]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const key = btn.getAttribute("data-add");
+    const map = {
+      domains1b: els.domains1bList,
+      domains789: els.domains789List,
+      domains0b: els.domains0bList
+    };
+    map[key]?.appendChild(createDomainRow(""));
+  });
+});
+
+els.saveBtn?.addEventListener("click", saveConfig);
+els.resetBtn?.addEventListener("click", () => {
+  if (originalConfig) renderConfig(originalConfig);
+});
+els.reloadBtn?.addEventListener("click", loadConfig);
+els.reloadLogsBtn?.addEventListener("click", loadLogs);
+els.logoutBtn?.addEventListener("click", async () => {
+  await fetch("/api/logout", { method: "POST", credentials: "include" });
+  window.location.href = "/";
+});
+
+(async function init() {
+  try {
+    await ensureMe();
+    await loadConfig();
+    await loadLogs();
+  } catch (err) {
+    console.error(err);
+    if (els.saveError) els.saveError.textContent = err.message || "Init failed";
+  }
+})();
