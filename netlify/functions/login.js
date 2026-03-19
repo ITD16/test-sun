@@ -8,13 +8,26 @@ exports.handler = async (event) => {
   try {
     const { username, password } = JSON.parse(event.body || "{}");
     const users = readUsers();
-    const found = users.find(x => x.username === username && x.password === password && x.active !== false);
 
-    if (!found) return json(401, { error: "Invalid username or password" });
+    const found = users.find(
+      x => x.username === username && x.password === password && x.active !== false
+    );
 
-    return json(200, { ok: true, username }, {
-      "Set-Cookie": setSessionCookie(username)
-    });
+    if (!found) {
+      return json(401, { error: "Invalid username or password" });
+    }
+
+    return json(
+      200,
+      {
+        ok: true,
+        username: found.username,
+        role: found.role || "user"
+      },
+      {
+        "Set-Cookie": setSessionCookie(found)
+      }
+    );
   } catch (err) {
     return json(500, { error: err.message || "Login error" });
   }
