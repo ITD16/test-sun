@@ -4,3 +4,4 @@
 {"time":"2026-03-19T05:11:48.634Z","user":"user","role":"user","action":"update_config","changes":{"domains1b":{"before":["SUNWIN.LD","GEMWIN.IM"],"after":["SUNWIN.IT","GEMWIN.IM"]}}}
 {"time":"2026-03-19T05:12:33.783Z","user":"user","role":"user","action":"update_config","changes":{"domains789":{"before":["789CLUB.SO"],"after":["789CLUB.US"]}}}
 {"time":"2026-03-19T05:34:55.653Z","user":"user","role":"user","ip":"108.165.93.70","deviceInfo":"Mac / Chrome","action":"update_config","changes":{"domains1b":{"before":["SUNWIN.IT","GEMWIN.IM"],"after":["SUNWIN.PM","GEMWIN.IM"]}}}
+{"time":"2026-03-19T09:12:38.204Z","user":"user","role":"user","ip":"108.165.93.70","deviceInfo":"Mac / Chrome","action":"update_config","changes":{"domains789":{"before":["789CLUB.US"],"after":["789CLUB.US","TEST.IS"]}}}
