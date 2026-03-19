@@ -2,11 +2,13 @@
   {
     "username": "admin",
     "password": "123456",
+    "role": "admin",
     "active": true
   },
   {
     "username": "user",
     "password": "123456",
+    "role": "user",
     "active": true
   }
 ]
